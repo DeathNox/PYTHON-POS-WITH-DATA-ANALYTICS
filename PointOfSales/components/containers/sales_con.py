@@ -221,4 +221,3 @@ def safe_remove_modal(modal):
     except ValueError:
         pass  # Ignore if modal is not in the list
     modal.destroy()
-

@@ -12,7 +12,6 @@ def close_figures():
     plt.close('all')  # Closes all open figures
 
 
-
 def open_product_modal_pieChart(category_name):
     pie_chart(category_name)
 
@@ -47,3 +46,5 @@ def pie_chart(category_name):
 
     except Exception as e:
         print(f"Error - unable to connect / convert to data: {e}")
+
+    
