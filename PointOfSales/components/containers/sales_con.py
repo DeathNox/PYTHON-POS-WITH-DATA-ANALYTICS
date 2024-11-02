@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk 
 from ..actions.db.fetch_top_sellers import get_top_selling_items, get_top_selling_item_details
 from ..actions.db.fetch_sales import get_avg_order
-from ..actions.data_visualization import open_product_modal_pieChart
+from ..actions.data_visualization import open_product_modal_pieChart, display_line_chart
 from .orders_con import get_total_income, get_profit
 from ..actions.db.fetch_product_categories import get_product_categories
 import matplotlib.pyplot as plt  
@@ -97,9 +97,10 @@ def sales_container(window):
     analytics_data_frame = ctk.CTkFrame(analytics_frame, fg_color="#F1EBEB", height=350, width=580)
     analytics_data_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-    # Placeholder for the actual graph
+    # Display the line chart in the analytics_data_frame
+    display_line_chart(analytics_data_frame)
 
-   
+
     # Grids
     analytics_frame.grid_rowconfigure(1, weight=1)
     analytics_frame.grid_columnconfigure(0, weight=1)
@@ -221,3 +222,4 @@ def safe_remove_modal(modal):
     except ValueError:
         pass  # Ignore if modal is not in the list
     modal.destroy()
+
