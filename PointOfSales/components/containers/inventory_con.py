@@ -52,7 +52,7 @@ class InventoryDisplay(ctk.CTkFrame):
         # Coffee Base Button
         
         
-        coffee_btn = Image.open("./imgs/icons/categories/light_/coffee_base.png")
+        coffee_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/coffee_base.png")
         
         resized_icon = coffee_btn.resize((30, 40))
         ctk_coffee_icon = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
@@ -80,7 +80,7 @@ class InventoryDisplay(ctk.CTkFrame):
         # Base Liquids Button
         
           
-        base_liquid_btn = Image.open("./imgs/icons/categories/light_/base_liquids.png")
+        base_liquid_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/base_liquids.png")
         
         resized_icon = base_liquid_btn.resize((30, 40))
         ctk_base_liquid_icon = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
@@ -109,7 +109,7 @@ class InventoryDisplay(ctk.CTkFrame):
 
         # additives Button
         
-        additives_btn = Image.open("./imgs/icons/categories/light_/additives.png")
+        additives_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/additives.png")
         
         resized_icon = additives_btn.resize((30, 40))
         ctk_additives_btn = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
@@ -137,7 +137,7 @@ class InventoryDisplay(ctk.CTkFrame):
 
         # Toppings Button
         
-        toppings_btn = Image.open("./imgs/icons/categories/light_/toppings.png")
+        toppings_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/toppings.png")
         resized_icon = toppings_btn.resize((30, 40))
         ctk_toppings_btn= ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
         
@@ -170,7 +170,7 @@ class InventoryDisplay(ctk.CTkFrame):
         modal_add_ingredient = Modal_Add_Ingredient_Display(refresh_callback=self.display_all_ingredients)
 
         
-        add_new_inventory_btn_icon = Image.open("./imgs/misc/add_inventory.png")
+        add_new_inventory_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/misc/add_inventory.png")
         resized_icon = add_new_inventory_btn_icon.resize((30, 40))
         ctk_add_new_inventory_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
         

@@ -83,7 +83,7 @@ def display_products(window):
       
       
     # Generate Product Btn
-      generate_product_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/ai_icon.png")
+      generate_product_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/chat-gpt.png")
       resized_icon = generate_product_icon.resize((30, 30))
       generate_product_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
