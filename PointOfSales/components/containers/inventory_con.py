@@ -11,6 +11,9 @@ class InventoryDisplay(ctk.CTkFrame):
 
         from components.frames.container import ContainerFrame
         from components.frames.header import HeaderFrame
+        
+        # Modal Import
+        from components.actions.modal_add_ingredient import Modal_Add_Ingredient_Display
 
         container = ContainerFrame(self)
         container.pack(fill="both", expand=True, pady=(5, 5), padx=(5, 5))
@@ -34,7 +37,7 @@ class InventoryDisplay(ctk.CTkFrame):
         category_lbl.pack(anchor="nw", pady=(20, 0), padx=25)
         
         # Category Sort - Start
-        category_frame = ctk.CTkFrame(container, fg_color="#F1EBEB")
+        category_frame = ctk.CTkFrame(container, fg_color="#EBE0D6")
         category_frame.pack(fill="x", pady=10)
 
        
@@ -49,7 +52,7 @@ class InventoryDisplay(ctk.CTkFrame):
         # Coffee Base Button
         
         
-        coffee_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/coffee_base.png")
+        coffee_btn = Image.open("./imgs/icons/categories/light_/coffee_base.png")
         
         resized_icon = coffee_btn.resize((30, 40))
         ctk_coffee_icon = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
@@ -63,20 +66,21 @@ class InventoryDisplay(ctk.CTkFrame):
                 self, 
                 self.ingredient_display_scrollable_frame, 
                 self.create_status_dropdown, 
-                "coffee_base"
+                "Coffee Base"
             ),
             corner_radius=10,
             font=("Inter", 25, "bold"),
             fg_color="#372724",
             width=150,
-            height=55
+            height=55,
+            text_color="#F1EBEB"
         )
         coffee_base_button.grid(row=0, column=0, padx=button_padding_x, pady=button_padding_y)
 
         # Base Liquids Button
         
           
-        base_liquid_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/base_liquids.png")
+        base_liquid_btn = Image.open("./imgs/icons/categories/light_/base_liquids.png")
         
         resized_icon = base_liquid_btn.resize((30, 40))
         ctk_base_liquid_icon = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
@@ -98,14 +102,14 @@ class InventoryDisplay(ctk.CTkFrame):
                 self, 
                 self.ingredient_display_scrollable_frame, 
                 self.create_status_dropdown, 
-                "base_liquids"
+                "Base Liquids"
             )
         )
         base_liquids_button.grid(row=0, column=1, padx=button_padding_x, pady=button_padding_y)
 
         # additives Button
         
-        additives_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/additives.png")
+        additives_btn = Image.open("./imgs/icons/categories/light_/additives.png")
         
         resized_icon = additives_btn.resize((30, 40))
         ctk_additives_btn = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
@@ -126,15 +130,14 @@ class InventoryDisplay(ctk.CTkFrame):
                 self, 
                 self.ingredient_display_scrollable_frame, 
                 self.create_status_dropdown, 
-                "additives"
+                "Additives"
             )
         )
         additives_button.grid(row=0, column=2, padx=button_padding_x, pady=button_padding_y)
 
         # Toppings Button
         
-        toppings_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/toppings.png")
-        
+        toppings_btn = Image.open("./imgs/icons/categories/light_/toppings.png")
         resized_icon = toppings_btn.resize((30, 40))
         ctk_toppings_btn= ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
         
@@ -153,7 +156,7 @@ class InventoryDisplay(ctk.CTkFrame):
                 self, 
                 self.ingredient_display_scrollable_frame, 
                 self.create_status_dropdown, 
-                "toppings"
+                "Toppings"
             )
         )
         toppings_button.grid(row=0, column=3, padx=button_padding_x, pady=button_padding_y)
@@ -161,9 +164,37 @@ class InventoryDisplay(ctk.CTkFrame):
         # Category Sort - End
 
 
+        # Add New Inventory
+       
+       
+        modal_add_ingredient = Modal_Add_Ingredient_Display(refresh_callback=self.display_all_ingredients)
+
+        
+        add_new_inventory_btn_icon = Image.open("./imgs/misc/add_inventory.png")
+        resized_icon = add_new_inventory_btn_icon.resize((30, 40))
+        ctk_add_new_inventory_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
+        
+        
+       
+        
+        add_new_inventory_btn = ctk.CTkButton(
+            container,
+            image= ctk_add_new_inventory_btn_icon,
+            text="ADD NEW INGREDIENT",
+            font=("Inter", 16, 'bold'),
+             fg_color="#5482C7",
+            text_color="white",
+            corner_radius=15,
+            cursor="hand2",
+            command=lambda: modal_add_ingredient.modal_add_inventory())
+
+    
+        add_new_inventory_btn.pack(anchor="nw", pady=(20, 0), padx=25)
+
+
         # scrollable frame for inventory
         table_frame = ctk.CTkFrame(container, fg_color="#372724", corner_radius=10)
-        table_frame.pack(padx=20, pady=(150, 10), fill="both", expand=True)
+        table_frame.pack(padx=20, pady=(30, 10), fill="both", expand=True)
 
         table_header_frame = ctk.CTkFrame(table_frame, fg_color="#372724", corner_radius=5)
         table_header_frame.pack(fill="x")
@@ -188,6 +219,21 @@ class InventoryDisplay(ctk.CTkFrame):
         self.ingredient_display_scrollable_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         self.inventory_status_options = ["In Stock", "Out of Stock", "Low Stock"]
+        
+        self.display_all_ingredients()  # Call method to display all ingredients
+
+    def display_all_ingredients(self):
+        # Call display_inventory with an empty string or a keyword to represent all categories
+        display_inventory(
+            self, 
+            self.ingredient_display_scrollable_frame, 
+            self.create_status_dropdown, 
+            "All"  # or use "" if you modify your fetching method accordingly
+        )
+
+        
+        
+        
 
     def create_status_dropdown(self, product_name, initial_status):
         from components.actions.db.update_ingredient_status import update_ingredient_status
