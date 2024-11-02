@@ -91,15 +91,20 @@ def sales_container(window):
     # Prevent grid propagation to maintain sizing
     analytics_frame.grid_propagate(0)
 
-
-    # DALE
     # Analytics Data Frame (for displaying cash flow)
     analytics_data_frame = ctk.CTkFrame(analytics_frame, fg_color="#F1EBEB", height=350, width=580)
     analytics_data_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-    # Display the line chart in the analytics_data_frame
-    display_line_chart(analytics_data_frame)
+    # Add a label with the message "Click to view"
+    click_to_view_label = ctk.CTkLabel(analytics_data_frame, text="Click to view", fg_color="#F1EBEB", text_color="#000000")
+    click_to_view_label.place(relx=0.5, rely=0.5, anchor="center")
 
+    # Event handler to display the line chart
+    def on_analytics_frame_click(event):
+        display_line_chart(analytics_data_frame)
+
+    # Bind the click event to the analytics_data_frame
+    analytics_data_frame.bind("<Button-1>", on_analytics_frame_click)
 
     # Grids
     analytics_frame.grid_rowconfigure(1, weight=1)
@@ -222,4 +227,3 @@ def safe_remove_modal(modal):
     except ValueError:
         pass  # Ignore if modal is not in the list
     modal.destroy()
-
