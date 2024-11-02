@@ -47,4 +47,54 @@ def pie_chart(category_name):
     except Exception as e:
         print(f"Error - unable to connect / convert to data: {e}")
 
-    
+def display_line_chart(frame, period='daily'):
+    try:
+        # Close previous figures to avoid overlap
+        close_figures()
+
+        # Use a fresh connection each time by creating it within the function
+        with engine.connect() as db:
+            # Query to get total sales for each date
+            query = """
+            SELECT order_date, SUM(sub_total) as total_sale
+            FROM tbl_sales
+            GROUP BY order_date
+            """
+            df = pd.read_sql_query(query, db)
+            
+            if df.empty:
+                print("No sales data found.")
+                return
+
+            # Convert order_date to datetime
+            df['order_date'] = pd.to_datetime(df['order_date'])
+
+            # Aggregate sales data by the specified period
+            if period == 'daily':
+                df_agg = df.set_index('order_date').resample('D').sum()
+            elif period == 'weekly':
+                df_agg = df.set_index('order_date').resample('W').sum()
+            elif period == 'monthly':
+                df_agg = df.set_index('order_date').resample('M').sum()
+            else:
+                raise ValueError("Invalid period. Choose from 'daily', 'weekly', or 'monthly'.")
+
+            # Create the Matplotlib figure and plot
+            fig, ax = plt.subplots(figsize=(6, 4))
+            ax.plot(df_agg.index, df_agg['total_sale'], marker='o', color='g')
+            ax.set_title(f'Cumulative Sales Revenue ({period.capitalize()})')
+            ax.set_xlabel('Date')
+            ax.set_ylabel('Sales Revenue')
+            ax.grid(True)
+
+            # Format the x-axis labels to 'YY-MM-DD'
+            ax.xaxis.set_major_formatter(plt.FixedFormatter(df_agg.index.strftime('%y-%m-%d')))
+
+            # Embed the Matplotlib figure in the Tkinter Frame
+            canvas = FigureCanvasTkAgg(fig, master=frame)  # Attach figure to the frame
+            canvas.draw()  # Draw the canvas
+            canvas.get_tk_widget().pack(fill='both', expand=True)  # Make it fill the frame
+            plt.show()  # This will display the line chart in a separate window
+
+    except Exception as e:
+        print(f"Error - unable to connect / convert to data: {e}")
