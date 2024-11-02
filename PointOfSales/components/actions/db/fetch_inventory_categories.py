@@ -4,13 +4,21 @@ def fetch_inventory_by_category(category):
     try:
         mycursor = db.cursor()
         
-        sql = """
-        SELECT ingredient_name, ingredient_category, status
-        FROM tbl_product_ingredients
-        WHERE ingredient_category = %s
-        """
+        # Prepare SQL query based on the category
+        if category == "All" or category == "":
+            sql = """
+            SELECT ingredient_name, ingredient_category, status
+            FROM tbl_product_ingredients
+            """
+            mycursor.execute(sql)
+        else:
+            sql = """
+            SELECT ingredient_name, ingredient_category, status
+            FROM tbl_product_ingredients
+            WHERE ingredient_category = %s
+            """
+            mycursor.execute(sql, (category,))
         
-        mycursor.execute(sql, (category,))
         item_inventory_by_category = mycursor.fetchall()
         
     except Exception as e:
