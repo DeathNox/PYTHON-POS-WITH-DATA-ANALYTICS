@@ -11,8 +11,8 @@ def connect_to_database():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="password",
-        database="pos_new"
+        password="root",
+        database="kapehan_pos"
     )
 
 # Load data from the database
@@ -52,10 +52,10 @@ def train_random_forest(ingredient_matrix):
 # Generate hypothetical new product combinations
 def generate_hypothetical_products(ingredients_df, num_combinations=5):
     ingredient_categories = {
-        'toppings': [],
-        'base_liquids': [],
-        'coffee_base': [],
-        'additives': []
+        'Toppings': [],
+        'Base Liquids': [],
+        'Coffee Base': [],
+        'Additives': []
     }
 
     # Populate ingredient categories from the DataFrame
@@ -73,14 +73,14 @@ def generate_hypothetical_products(ingredients_df, num_combinations=5):
         combination = []
 
         # Randomly select ingredients ensuring they come from different categories
-        if ingredient_categories['toppings']:
-            combination.append(random.choice(ingredient_categories['toppings']))
-        if ingredient_categories['base_liquids']:
-            combination.append(random.choice(ingredient_categories['base_liquids']))
-        if ingredient_categories['coffee_base']:
-            combination.append(random.choice(ingredient_categories['coffee_base']))
-        if ingredient_categories['additives']:
-            combination.append(random.choice(ingredient_categories['additives']))
+        if ingredient_categories['Toppings']:
+            combination.append(random.choice(ingredient_categories['Toppings']))
+        if ingredient_categories['Base Liquids']:
+            combination.append(random.choice(ingredient_categories['Base Liquids']))
+        if ingredient_categories['Coffee Base']:
+            combination.append(random.choice(ingredient_categories['Coffee Base']))
+        if ingredient_categories['Additives']:
+            combination.append(random.choice(ingredient_categories['Additives']))
 
         # Shuffle to randomize ingredient order in the combination
         random.shuffle(combination)
