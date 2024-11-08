@@ -2,7 +2,10 @@ import customtkinter as ctk
 from decimal import Decimal
 from datetime import datetime
 from db_setup.db_connect import db, mycursor
+from PIL import Image, ImageTk
 
+
+from components.actions.receipt_payment_method.modal_cash_payment import show_cash_payment_modal
 
 class ReceiptContainer:
     
@@ -10,7 +13,9 @@ class ReceiptContainer:
         """Check if the receipt container and its frame are valid and not destroyed."""
         return self.frame.winfo_exists()
     
-
+    def get_subtotal(self):
+        """Return the current subtotal value."""
+        return self.subtotal
     
     def __init__(self, window):
         self.window = window
@@ -53,11 +58,74 @@ class ReceiptContainer:
         
         self.total = Decimal('0.00')
         
-        self.summary_frame = ctk.CTkFrame(self.frame, fg_color="#EBE0D6")
-        self.summary_frame.pack(side="bottom", fill="x", padx=5, pady=10)
         
+        
+       # ? Payment Method Container / Frame - Start
+
+        self.payment_frame = ctk.CTkFrame(self.frame, fg_color="#EBE0D6", height=90)
+        self.payment_frame.pack(fill="x", padx=5, pady=(10, 10))
+
+        # Payment Frame Label (Top Left)
+        self.payment_frame_lbl = ctk.CTkLabel(
+            self.payment_frame,
+            text="Payment Method",
+            font=("Inter", 18, "bold"),
+            fg_color="transparent",
+            text_color="#1E1E1E",  
+            compound="left"
+        )
+        self.payment_frame_lbl.grid(row=0, column=0, columnspan=2, padx=10, pady=(3, 5), sticky="w")
+
+      
+        self.payment_frame.grid_columnconfigure((0, 1), weight=1)
+
+        # Cash Payment Button
+        cash_payment_btn_icon = Image.open("./imgs/receipt_icons/cash_payment.png")
+        resized_icon = cash_payment_btn_icon.resize((30, 30))
+        cash_payment_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
+
+        
+        self.cash_payment_btn = ctk.CTkButton(
+            self.payment_frame,
+            text="",
+            font=("Inter", 20, "bold"),
+            image=cash_payment_btn_icon,
+            fg_color="#372724",
+            width=100,
+            height=35,
+            corner_radius=5,
+            command=lambda: show_cash_payment_modal(self.get_subtotal())
+        )
+        
+        
+        self.cash_payment_btn.grid(row=1, column=0, padx=(25, 10), pady=(5, 15), sticky="e")  
+        
+
+        # E-Wallet Payment Button
+        e_wallet_payment_btn_icon = Image.open("./imgs/receipt_icons/e-wallet_payment.png")
+        resized_icon = e_wallet_payment_btn_icon.resize((30, 30))
+        e_wallet_payment_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
+
+        self.ewallet_payment_btn = ctk.CTkButton(
+            self.payment_frame,
+            text="",
+            font=("Inter", 20, "bold"),
+            image=e_wallet_payment_btn_icon,
+            fg_color="#372724",
+            width=100,
+            height=35,
+            corner_radius=5,
+        )
+        self.ewallet_payment_btn.grid(row=1, column=1, padx=(10, 25), pady=(5, 15), sticky="w")  
+
+        # ? Payment Method Container / Frame - End
+
+
         
       
+        self.summary_frame = ctk.CTkFrame(self.frame, fg_color="#EBE0D6")
+        self.summary_frame.pack(side="bottom", fill="x", padx=5, pady=10)
+
         formatted_header = f"{'*' * 30}\nORDER RECEIPT\n{'*' * 30}"
         header_label = ctk.CTkLabel(self.receipt_list, text=formatted_header, text_color="black", font=("Inter", 16, "bold"))
         header_label.pack(pady=10)
@@ -86,6 +154,7 @@ class ReceiptContainer:
         # Process Order button
         self.process_button = ctk.CTkButton(self.summary_frame, text="PROCESS ORDER", font=("Inter", 20, "bold"), width=20, command=self.process_order, fg_color="#372724")
         self.process_button.pack(pady=20)
+
 
 
        # DALE
@@ -281,6 +350,7 @@ class ReceiptContainer:
                 sub_total = item['total_price']
                 order_status = "Pending"
 
+           # DALE - New Column for tbl_sales
                 category = self.get_product_category(item_name) or 'Unknown Category' 
 
 
@@ -290,9 +360,14 @@ class ReceiptContainer:
                 """
                 values = (product_id, quantity, unit_price, sub_total, datetime.now(), order_status, item_name, category)
 
+                # Dale - Inserting into tbl_sales
+                sql2 = "INSERT INTO tbl_sales (product_id, product_name, product_category, quantity, unit_price, sub_total) VALUES (%s, %s, %s, %s, %s, %s)"
+
+                values2 = (product_id, item_name, category, quantity, unit_price, sub_total)
 
                 # Execute the query and commit the transaction
                 mycursor.execute(sql, values)
+                mycursor.execute(sql2, values2)
                 db.commit()
             
             # Show the notification
@@ -308,10 +383,13 @@ class ReceiptContainer:
             
             self.window.after(2000, hide_receipt_container)
             
+            
+            
+            
+
         except Exception as e:
             print(f"Error processing order: {e}")
             self.show_notification("Error processing order.")  # Display error notification
-
 
 
     def get_product_id(self, product_name):
