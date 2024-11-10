@@ -12,17 +12,17 @@ class Modal_Add_Ingredient_Display:
         
         from main import CenterWindowToDisplay
                   
-        modal = ctk.CTkToplevel()
-        modal.title(f"Add Ingredient")
-        modal.geometry(CenterWindowToDisplay(modal, 520, 480, modal._get_window_scaling()))
-        modal.resizable(False, False)
-        modal.configure(fg_color="#30211E")
+        self.modal = ctk.CTkToplevel()
+        self.modal.title(f"Add Ingredient")
+        self.modal.geometry(CenterWindowToDisplay(self.modal, 520, 480, self.modal._get_window_scaling()))
+        self.modal.resizable(False, False)
+        self.modal.configure(fg_color="#30211E")
 
-        container = ctk.CTkFrame(modal, fg_color="#EBE0D6")
+        container = ctk.CTkFrame(self.modal, fg_color="#EBE0D6")
         container.grid(row=0, column=0, padx=(15, 15), pady=(15, 15), sticky="nsew")
 
-        modal.grid_rowconfigure(0, weight=1)
-        modal.grid_columnconfigure(0, weight=1)
+        self.modal.grid_rowconfigure(0, weight=1)
+        self.modal.grid_columnconfigure(0, weight=1)
 
         modal_lbl = ctk.CTkLabel(
             container,
@@ -148,7 +148,7 @@ class Modal_Add_Ingredient_Display:
         cancel_btn = ctk.CTkButton(
             button_container,
             text="Cancel",
-            command=modal.destroy,
+            command=self.modal.destroy,
             font=("Inter", 20, "bold"),
             width=100,
             fg_color="#F5F5F5",
@@ -219,6 +219,7 @@ class Modal_Add_Ingredient_Display:
                 )
                 db.commit()
                 tk.messagebox.showinfo("Success", "Ingredient added successfully.")
+                self.modal.destroy()
                 self.refresh_callback() 
                 
             except Exception as e:
