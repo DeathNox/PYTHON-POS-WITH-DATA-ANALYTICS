@@ -34,7 +34,7 @@ class Modal_Generate_New_Product_Display:
         # Title of the Interface
         title_label = ctk.CTkLabel(
             header_frame,
-            text="Generate New Product",
+            text="Suggested New Products",
             text_color="#EBE0D6",
             font=("Inter", 26, "bold"),
             bg_color="transparent", compound="left"
