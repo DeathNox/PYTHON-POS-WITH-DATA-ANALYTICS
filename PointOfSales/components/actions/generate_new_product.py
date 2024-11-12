@@ -11,8 +11,8 @@ def connect_to_database():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="root",
-        database="kapehan_pos"
+        password="password",
+        database="pos_new"
     )
 
 # Load data from the database

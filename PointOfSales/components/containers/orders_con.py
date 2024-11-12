@@ -712,7 +712,7 @@ def process_order(self):
 
     # DALE - query for tbl_sales
 def insert_into_sales(product_id, item_name, category, quantity, unit_price, sub_total):
-        """Insert a sales record into tbl_sa les."""
+        """Insert a sales record into tbl_sales."""
         sql2 = "INSERT INTO tbl_sales (product_id, product_name, product_category, quantity, unit_price, sub_total) VALUES (%s, %s, %s, %s, %s, %s)"
         values2 = (product_id, item_name, category, quantity, unit_price, sub_total)
         mycursor.execute(sql2, values2)

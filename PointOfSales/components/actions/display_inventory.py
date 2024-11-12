@@ -31,7 +31,7 @@ def display_inventory(inventory_display, ingredient_display_scrollable_frame, cr
         status_dropdown.grid(row=idx, column=1, padx=(5, 5), pady=5, sticky="w")  
 
         # Edit Button
-        edit_btn_icon = Image.open("./imgs/misc/edit_icon.png")
+        edit_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/misc/edit_icon.png")
         resized_icon = edit_btn_icon.resize((30, 30))
         edit_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
@@ -50,7 +50,7 @@ def display_inventory(inventory_display, ingredient_display_scrollable_frame, cr
         action_edit_button.grid(row=idx, column=2, padx=(5, 5), pady=5, sticky="ew") 
 
         # Delete Button
-        delete_btn_icon = Image.open("./imgs/misc/delete_icon.png")
+        delete_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/misc/delete_icon.png")
         resized_icon = delete_btn_icon.resize((30, 30))
         delete_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 

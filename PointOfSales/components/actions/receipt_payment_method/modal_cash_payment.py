@@ -1,9 +1,27 @@
 import customtkinter as ctk
 import tkinter as tk
+from db_setup.db_connect import db, mycursor
 
 
+def insert_amount_receive(amount_receive, change_amount, payment_method):
+        # Create the INSERT query with an additional field for payment_method
+        query = "INSERT INTO tbl_payments (amount_received, change_amount, payment_method) VALUES (%s, %s, %s)"
 
-def show_cash_payment_modal(orders_total):
+        try: 
+            # Execute the query
+            mycursor.execute(query, (amount_receive, change_amount, payment_method))
+            
+            # Commit the transaction
+            db.commit()
+            
+            print("Amount received, change, and payment method inserted successfully.")
+        except Exception as e:
+            # Rollback in case of error
+            db.rollback()
+            print(f"Failed to insert amount received, change, and payment method: {e}")
+
+
+def show_cash_payment_modal(orders_total, on_payment_confirmed):
     from main import CenterWindowToDisplay
 
     # Modal window
@@ -105,6 +123,12 @@ def show_cash_payment_modal(orders_total):
     # Optional
     # amount_received_entry.insert(0, "0.00") 
 
+    def on_submit():
+        amount_receive = float(amount_received_entry.get())
+        payment_method = "Cash"
+        change_amount = calculated_change
+        on_payment_confirmed(amount_receive, change_amount, payment_method)
+        modal.destroy()
 
 
 
@@ -158,7 +182,22 @@ def show_cash_payment_modal(orders_total):
     button_container.grid_columnconfigure(0, weight=1)
     
     
-    
+    def calculate_change(event):
+        global calculated_change  # Access the global variable
+        
+        try:
+            amount_received = float(amount_received_entry.get())
+            
+            # Calculate change
+            calculated_change = amount_received - orders_total
+            change_text = f"{calculated_change:.2f}" if calculated_change >= 0 else "Insufficient"
+            change_amount_lbl.configure(text=change_text)
+            
+        except ValueError:
+            change_amount_lbl.configure(text="Invalid Input")
+            calculated_change = 0.0  
+
+
     # Cancel Button
     cancel_btn = ctk.CTkButton(
             button_container,
@@ -178,30 +217,9 @@ def show_cash_payment_modal(orders_total):
             width=100,
             fg_color="#2B9B43",
             text_color="#F5F5F5",
-           
+            command=on_submit
         )
     confirm_payment_btn.grid(row=0, column=1, padx=(20, 20), pady=10, sticky="e")
 
-
-
-    # Function to calculate and display the change
-    def calculate_change(event):
-        
-        try:
-            
-            amount_received = float(amount_received_entry.get())
-            
-            change = amount_received - orders_total
-            
-            change_text = f"{change:.2f}" if change >= 0 else "Insufficient"
-            change_amount_lbl.configure(text=change_text)
-            
-            
-        except ValueError:
-            change_amount_lbl.configure(text="Invalid Input")
-
     # Bind Enter key 
-    amount_received_entry.bind("<Return>", calculate_change)
-
-    
-    
+    amount_received_entry.bind("<KeyRelease>", calculate_change)
