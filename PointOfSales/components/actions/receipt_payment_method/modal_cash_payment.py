@@ -4,21 +4,26 @@ from db_setup.db_connect import db, mycursor
 
 
 def insert_amount_receive(amount_receive, change_amount, payment_method):
-        # Create the INSERT query with an additional field for payment_method
-        query = "INSERT INTO tbl_payments (amount_received, change_amount, payment_method) VALUES (%s, %s, %s)"
+    # Combined query that inserts amount, change, payment method, and the latest purchase_order_id
+    query = """
+    INSERT INTO tbl_payments (amount_received, change_amount, payment_method, purchase_order_id)
+    VALUES (%s, %s, %s, (SELECT purchase_order_id FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 1))
+    """
+    
+    try:
+        # Execute the combined query
+        mycursor.execute(query, (amount_receive, change_amount, payment_method))
+        
+        # Commit the transaction
+        db.commit()
+        
+        print("Amount received, change, payment method, and latest purchase_order_id inserted successfully.")
+    except Exception as e:
+        # Rollback in case of error
+        db.rollback()
+        print(f"Failed to insert data: {e}")
 
-        try: 
-            # Execute the query
-            mycursor.execute(query, (amount_receive, change_amount, payment_method))
-            
-            # Commit the transaction
-            db.commit()
-            
-            print("Amount received, change, and payment method inserted successfully.")
-        except Exception as e:
-            # Rollback in case of error
-            db.rollback()
-            print(f"Failed to insert amount received, change, and payment method: {e}")
+
 
 
 def show_cash_payment_modal(orders_total, on_payment_confirmed):
