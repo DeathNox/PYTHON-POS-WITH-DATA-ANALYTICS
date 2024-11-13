@@ -22,16 +22,19 @@
 DROP TABLE IF EXISTS `tbl_product_ingredients`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_product_ingredients` (
-  `ingredient_id` int NOT NULL AUTO_INCREMENT,
-  `product_id` int DEFAULT NULL,
-  `ingredient_name` varchar(255) DEFAULT NULL,
-  `ingredient_category` varchar(255) DEFAULT NULL,
-  `status` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ingredient_id`),
-  UNIQUE KEY `product_id` (`product_id`,`ingredient_name`),
-  CONSTRAINT `tbl_product_ingredients_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `tbl_products` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE tbl_product_ingredients (
+  ingredient_id int NOT NULL AUTO_INCREMENT,
+  product_id int DEFAULT NULL,
+  ingredient_name varchar(255) DEFAULT NULL,
+  ingredient_category varchar(255) DEFAULT NULL,
+  status varchar(100) DEFAULT NULL,
+  PRIMARY KEY (ingredient_id),
+  UNIQUE KEY product_id (product_id, ingredient_name),
+  CONSTRAINT tbl_product_ingredients_ibfk_1 
+    FOREIGN KEY (product_id) 
+    REFERENCES tbl_products (product_id) 
+    ON DELETE SET NULL
+); ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
