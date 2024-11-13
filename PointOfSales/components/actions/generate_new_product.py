@@ -5,8 +5,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import random
 import customtkinter as ctk
+from sqlalchemy import create_engine
 
-# MySQL Database Connection
+
 def connect_to_database():
     return mysql.connector.connect(
         host="localhost",
@@ -17,18 +18,15 @@ def connect_to_database():
 
 # Load data from the database
 def load_data():
-    conn = connect_to_database()
+    engine = connect_to_database()
     query_products = "SELECT product_id, product_name FROM tbl_products"
     query_ingredients = "SELECT product_id, ingredient_name, ingredient_category FROM tbl_product_ingredients"
     
-    products_df = pd.read_sql(query_products, conn)
-    ingredients_df = pd.read_sql(query_ingredients, conn)
-    
-    conn.close()
+    products_df = pd.read_sql(query_products, engine)
+    ingredients_df = pd.read_sql(query_ingredients, engine)
     
     return products_df, ingredients_df
-
-# Create ingredient presence matrix
+# ingredient matrix
 def create_ingredient_matrix(ingredients_df, products_df):
     ingredient_matrix = ingredients_df.pivot_table(index='product_id', 
                                                    columns='ingredient_name', 
@@ -37,19 +35,20 @@ def create_ingredient_matrix(ingredients_df, products_df):
     ingredient_matrix = ingredient_matrix.reindex(products_df['product_id'])
     return ingredient_matrix.fillna(0)
 
-# Train the Random Forest model
+#  Random Forest model
 def train_random_forest(ingredient_matrix):
     X = ingredient_matrix.values  
     y = [1] * len(X) 
 
-    # Split the data
+
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = RandomForestClassifier(random_state=42)
     model.fit(X_train, y_train)
 
     return model
 
-# Generate hypothetical new product combinations
+# hypothetical new product combinations
 def generate_hypothetical_products(ingredients_df, num_combinations=5):
     ingredient_categories = {
         'Toppings': [],
@@ -58,7 +57,6 @@ def generate_hypothetical_products(ingredients_df, num_combinations=5):
         'Additives': []
     }
 
-    # Populate ingredient categories from the DataFrame
     for index, row in ingredients_df.iterrows():
         ingredient_name = row['ingredient_name']
         ingredient_category = row['ingredient_category']
@@ -68,11 +66,10 @@ def generate_hypothetical_products(ingredients_df, num_combinations=5):
 
     all_combinations = []
 
-    # Generate unique combinations of ingredients
+
     for i in range(num_combinations):
         combination = []
 
-        # Randomly select ingredients ensuring they come from different categories
         if ingredient_categories['Toppings']:
             combination.append(random.choice(ingredient_categories['Toppings']))
         if ingredient_categories['Base Liquids']:
@@ -82,7 +79,7 @@ def generate_hypothetical_products(ingredients_df, num_combinations=5):
         if ingredient_categories['Additives']:
             combination.append(random.choice(ingredient_categories['Additives']))
 
-        # Shuffle to randomize ingredient order in the combination
+      
         random.shuffle(combination)
         all_combinations.append(combination)
 
@@ -91,74 +88,49 @@ def generate_hypothetical_products(ingredients_df, num_combinations=5):
 
     return all_combinations
 
-# Generate a product name based on the ingredients
+
 def generate_product_name(ingredients):
-    base_names = ["Latte", "Espresso", "Americano", "Frappuccino", "Mocha", "Cappuccino"]
-    name = " & ".join(ingredients) + " " + random.choice(base_names)
+    base_names = ["Latte", "Frappe", "Mocha"]
+    name = ", ".join(ingredients) + " " + random.choice(base_names)
     return name
 
-# POS Application Class
-class GenerateNewProduct:
-    def __init__(self):
-        self.products_df, self.ingredients_df = load_data()  # Load data from the database
-        self.ingredient_matrix = create_ingredient_matrix(self.ingredients_df, self.products_df)  
-        self.model = train_random_forest(self.ingredient_matrix)  # Train the model
-        self.init_gui()  
 
-    def init_gui(self):
-        ctk.set_appearance_mode("System")
-        ctk.set_default_color_theme("blue")
-        
-        self.root = ctk.CTk()
-        self.root.title("POS System")
-        self.root.geometry("400x400")
+def on_suggest_button_click(self):
+    new_product_suggestions = generate_hypothetical_products(self.ingredients_df)
+    valid_suggestions = suggest_new_products(self.products_df, self.model, self.ingredient_matrix, new_product_suggestions)
+    
+    limited_suggestions = valid_suggestions[:3] if valid_suggestions else []
+    
+    if limited_suggestions:
+        product_names = [generate_product_name(ingredients) for ingredients in limited_suggestions]
+        suggestions_text = "Suggested New Products:\n" + "\n".join(product_names)
+    else:
+        suggestions_text = "No valid new product combinations found."
+    
+    self.suggestions_label.configure(text=suggestions_text)
 
-        # Suggest new product button
-        self.suggest_button = ctk.CTkButton(self.root, text="Generate Combinations", command=self.on_suggest_button_click)
-        self.suggest_button.pack(pady=10)
 
-        # Suggestions result label
-        self.suggestions_label = ctk.CTkLabel(self.root, text="")
-        self.suggestions_label.pack(pady=10)
 
-        self.root.mainloop()
 
-    def on_suggest_button_click(self):
-            new_product_suggestions = generate_hypothetical_products(self.ingredients_df)
-            valid_suggestions = self.suggest_new_products(new_product_suggestions)
+def suggest_new_products(products_df, model, ingredient_matrix, new_combinations):
+    valid_products = []
+    existing_product_names = set(products_df['product_name'].str.lower())  
 
-          
-            limited_suggestions = valid_suggestions[:3]  
+    for combination in new_combinations:
+    
+        ingredient_vector = pd.Series(0, index=ingredient_matrix.columns)
+        for ingredient in combination:
+            if ingredient in ingredient_vector.index:
+                ingredient_vector[ingredient] = 1
 
-            if limited_suggestions:
-                  product_names = [generate_product_name(ingredients) for ingredients in limited_suggestions]
-                  suggestions_text = f"Suggested New Products:\n" + "\n".join(product_names)
-            else:
-                  suggestions_text = "No valid new product combinations found."
+        prediction = model.predict([ingredient_vector])[0]
+        if prediction == 1:
             
-            self.suggestions_label.configure(text=suggestions_text)
+            product_name = generate_product_name(combination).lower()
+            if product_name not in existing_product_names:
+                valid_products.append(combination)
+                existing_product_names.add(product_name)
 
-
-    def suggest_new_products(self, new_combinations):
-      valid_products = []
-      existing_product_names = set(self.products_df['product_name'].str.lower())  # Get existing product names in lowercase for comparison
-
-      for combination in new_combinations:
-            ingredient_vector = pd.Series(0, index=self.ingredient_matrix.columns)
-            for ingredient in combination:
-                  if ingredient in ingredient_vector.index:
-                        ingredient_vector[ingredient] = 1
-
-            input_vector = ingredient_vector.values.reshape(1, -1)
-            prediction = self.model.predict(input_vector)[0]
-
-            # print(f"Testing combination: {combination}, Prediction: {prediction}")  # Debugging o
-            
-            if prediction == 1:
-                  product_name = generate_product_name(combination).lower()  
-                  if product_name not in existing_product_names:  
-                        valid_products.append(combination)
-
-      return valid_products
+    return valid_products
 
 
