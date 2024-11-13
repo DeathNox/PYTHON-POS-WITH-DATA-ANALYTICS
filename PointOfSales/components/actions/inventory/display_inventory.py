@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from components.actions.db.fetch_inventory_categories import fetch_inventory_by_category
 from components.actions.db.delete_ingredient_item import delete_inventory_item
-from components.actions.modal_edit_ingredient_item import edit_ingredient_item
+from components.actions.inventory.modal_edit_ingredient_item import IngredientManager
 
 from PIL import Image, ImageTk
 
@@ -9,14 +9,14 @@ def display_inventory(inventory_display, ingredient_display_scrollable_frame, cr
     for widget in ingredient_display_scrollable_frame.winfo_children():
         widget.destroy()
 
-    # Fetch ingredients by category from the database
+    # Fetch ingredients 
     ingredients = fetch_inventory_by_category(category)
 
     for idx, ingredient in enumerate(ingredients):
         ingredient_name = ingredient[0]
         initial_status = ingredient[2]
 
-        # Create a label for the ingredient name
+      
         ingredient_label = ctk.CTkLabel(
             ingredient_display_scrollable_frame,
             text=ingredient_name,
@@ -34,6 +34,9 @@ def display_inventory(inventory_display, ingredient_display_scrollable_frame, cr
         edit_btn_icon = Image.open("./imgs/misc/edit_icon.png")
         resized_icon = edit_btn_icon.resize((30, 30))
         edit_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
+        
+        
+        edit_item = IngredientManager()
 
         action_edit_button = ctk.CTkButton(
             ingredient_display_scrollable_frame,
@@ -45,7 +48,7 @@ def display_inventory(inventory_display, ingredient_display_scrollable_frame, cr
             width=50,  
             height=40,
             cursor="hand2",
-             command=lambda name=ingredient_name: edit_ingredient_item(name, display_inventory, inventory_display, ingredient_display_scrollable_frame, create_status_dropdown, category)
+             command=lambda name=ingredient_name: edit_item.edit_ingredient_item(name, display_inventory, inventory_display, ingredient_display_scrollable_frame, create_status_dropdown, category)
         )
         action_edit_button.grid(row=idx, column=2, padx=(5, 5), pady=5, sticky="ew") 
 
@@ -75,3 +78,4 @@ def display_inventory(inventory_display, ingredient_display_scrollable_frame, cr
 
     for idx in range(len(ingredients)):
         ingredient_display_scrollable_frame.grid_rowconfigure(idx, weight=0) 
+        
