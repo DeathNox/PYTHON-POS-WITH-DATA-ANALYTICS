@@ -6,8 +6,8 @@ from db_setup.db_connect import db, mycursor
 def insert_amount_receive(amount_receive, change_amount, payment_method):
     # Combined query that inserts amount, change, payment method, and the latest purchase_order_id
     query = """
-    INSERT INTO tbl_payments (amount_received, change_amount, payment_method, purchase_order_id)
-    VALUES (%s, %s, %s, (SELECT purchase_order_id FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 1))
+    INSERT INTO tbl_payments (amount_received, change_amount, payment_method, purchase_order_id, sub_total)
+    VALUES (%s, %s, %s, (SELECT purchase_order_id FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 1), (SELECT sub_total FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 1));
     """
     
     try:
@@ -129,11 +129,23 @@ def show_cash_payment_modal(orders_total, on_payment_confirmed):
     # amount_received_entry.insert(0, "0.00") 
 
     def on_submit():
-        amount_receive = float(amount_received_entry.get())
-        payment_method = "Cash"
-        change_amount = calculated_change
-        on_payment_confirmed(amount_receive, change_amount, payment_method)
-        modal.destroy()
+        try:
+            amount_receive = float(amount_received_entry.get())
+            payment_method = "Cash"
+            change_amount = calculated_change
+
+            # Check if amount_received is enough
+            if amount_receive < orders_total:
+                print("Insufficient amount received. Please enter enough to cover the total.")
+                return  # Exit the function without calling on_payment_confirmed
+
+            # Call the function if payment is sufficient
+            on_payment_confirmed(amount_receive, change_amount, payment_method)
+            modal.destroy()
+
+        except ValueError:
+            print("Invalid input. Please enter a numeric amount.")
+
 
 
 
