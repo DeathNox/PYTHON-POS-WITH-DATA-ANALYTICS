@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from db_setup.db_connect import db
 from components.actions.db.fetch_inventory_categories import fetch_inventory_by_category
-from components.actions.display_inventory import display_inventory
+from components.actions.inventory.display_inventory import display_inventory
 from PIL import Image, ImageTk
 
 
@@ -13,7 +13,7 @@ class InventoryDisplay(ctk.CTkFrame):
         from components.frames.header import HeaderFrame
         
         # Modal Import
-        from components.actions.modal_add_ingredient import Modal_Add_Ingredient_Display
+        from components.actions.inventory.modal_add_ingredient import Modal_Add_Ingredient_Display
 
         container = ContainerFrame(self)
         container.pack(fill="both", expand=True, pady=(5, 5), padx=(5, 5))
@@ -43,15 +43,44 @@ class InventoryDisplay(ctk.CTkFrame):
        
 
         # Configuring grid columns for buttons
-        category_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
+        category_frame.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
 
         # Button padding values
-        button_padding_x = 10  
-        button_padding_y = 10  
+        button_padding_x = 5  
+        button_padding_y = 5  
+
+
+
+        # See all button
+        all_cat_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/print_icon.png")
+        
+        resized_icon = all_cat_btn.resize((30, 40))
+        ctk_all_cat_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
+        
+        
+        all_cat_button = ctk.CTkButton(
+            category_frame,
+            image=ctk_all_cat_btn_icon,
+            text="Show All Ingredients",
+            command=lambda: display_inventory(
+                self, 
+                self.ingredient_display_scrollable_frame, 
+                self.create_status_dropdown, 
+                "All"
+            ),
+            corner_radius=10,
+            font=("Inter", 22, "bold"),
+            fg_color="#372724",
+            width=150,
+            height=55,
+            text_color="#F1EBEB"
+        )
+        all_cat_button.grid(row=0, column=0, padx=button_padding_x, pady=button_padding_y)
+
+        
+
 
         # Coffee Base Button
-        
-        
         coffee_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/coffee_base.png")
         
         resized_icon = coffee_btn.resize((30, 40))
@@ -75,13 +104,12 @@ class InventoryDisplay(ctk.CTkFrame):
             height=55,
             text_color="#F1EBEB"
         )
-        coffee_base_button.grid(row=0, column=0, padx=button_padding_x, pady=button_padding_y)
+        coffee_base_button.grid(row=0, column=1, padx=button_padding_x, pady=button_padding_y)
 
         # Base Liquids Button
         
           
-        base_liquid_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/base_liquids.png")
-        
+        base_liquid_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/dark_/base_liquids.png")
         resized_icon = base_liquid_btn.resize((30, 40))
         ctk_base_liquid_icon = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
         
@@ -105,12 +133,11 @@ class InventoryDisplay(ctk.CTkFrame):
                 "Base Liquids"
             )
         )
-        base_liquids_button.grid(row=0, column=1, padx=button_padding_x, pady=button_padding_y)
+        base_liquids_button.grid(row=0, column=2, padx=button_padding_x, pady=button_padding_y)
 
         # additives Button
         
         additives_btn = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/categories/light_/additives.png")
-        
         resized_icon = additives_btn.resize((30, 40))
         ctk_additives_btn = ctk.CTkImage(dark_image=resized_icon, size=(25, 30))
         
@@ -133,7 +160,7 @@ class InventoryDisplay(ctk.CTkFrame):
                 "Additives"
             )
         )
-        additives_button.grid(row=0, column=2, padx=button_padding_x, pady=button_padding_y)
+        additives_button.grid(row=0, column=3, padx=button_padding_x, pady=button_padding_y)
 
         # Toppings Button
         
@@ -159,7 +186,7 @@ class InventoryDisplay(ctk.CTkFrame):
                 "Toppings"
             )
         )
-        toppings_button.grid(row=0, column=3, padx=button_padding_x, pady=button_padding_y)
+        toppings_button.grid(row=0, column=4, padx=button_padding_x, pady=button_padding_y)
 
         # Category Sort - End
 
@@ -170,7 +197,7 @@ class InventoryDisplay(ctk.CTkFrame):
         modal_add_ingredient = Modal_Add_Ingredient_Display(refresh_callback=self.display_all_ingredients)
 
         
-        add_new_inventory_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/misc/add_inventory.png")
+        add_new_inventory_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/print_icon.png")
         resized_icon = add_new_inventory_btn_icon.resize((30, 40))
         ctk_add_new_inventory_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
         
@@ -220,7 +247,7 @@ class InventoryDisplay(ctk.CTkFrame):
 
         self.inventory_status_options = ["In Stock", "Out of Stock", "Low Stock"]
         
-        self.display_all_ingredients()  # Call method to display all ingredients
+        self.display_all_ingredients()  
 
     def display_all_ingredients(self):
         # Call display_inventory with an empty string or a keyword to represent all categories

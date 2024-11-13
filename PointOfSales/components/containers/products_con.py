@@ -5,7 +5,7 @@ from io import BytesIO
 from PIL import Image, ImageTk
 from components.actions.db.fetch_products import get_all_products
 from components.frames.header import HeaderFrame
-from components.actions.generate_new_product import GenerateNewProduct
+from components.actions.modal_generate_product import Modal_Generate_New_Product_Display
 
 STATUS_OPTIONS = ["Available", "Not Available"]
 
@@ -80,9 +80,8 @@ def display_products(window):
     
       add_products_redirect.grid(row=0, column=0, padx=(20, 10), pady=(150, 5), sticky="e") 
 
-      
-      
-    # Generate Product Btn
+
+         # Generate Product Btn
       generate_product_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/icons/chat-gpt.png")
       resized_icon = generate_product_icon.resize((30, 30))
       generate_product_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
@@ -96,12 +95,11 @@ def display_products(window):
       height=40,
       corner_radius=15,
       cursor="hand2",
-      command=GenerateNewProduct
+      command=Modal_Generate_New_Product_Display
       )
 
     
-      generate_product.grid(row=0, column=6, padx=(1080, 10), pady=(150, 5), sticky="w") 
-
+      generate_product.grid(row=0, column=6, padx=(50, 10), pady=(150, 5), sticky="w") 
 
       table_frame = ctk.CTkFrame(container, fg_color="#372724", corner_radius=10)
       table_frame.pack(padx=20, pady=(150, 10), fill="both", expand=True)
@@ -479,7 +477,7 @@ def edit_product_action(product_name, window):
         text="Save Changes",
         font=("Inter", 16, "bold"),
         width=100,
-        fg_color="#E8BA19",
+        fg_color="#5482C7",
         text_color="#F5F5F5",
         command=lambda: save_product_changes(
             product_name,

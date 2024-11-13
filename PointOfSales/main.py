@@ -7,7 +7,7 @@ import sys, os
 
 
 def main():
-      
+ 
       window()
       
 
@@ -44,7 +44,7 @@ def CenterWindowToDisplay(Screen: CTk, width: int, height: int, scale_factor: fl
   
     x = int((screen_width / 2) - (width / 2))
     y = int((screen_height / 2) - (height / 2))
-    
+     
     return f"{width}x{height}+{x}+{y}"
 
 if __name__ == "__main__":
