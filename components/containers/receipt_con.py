@@ -6,11 +6,8 @@ from PIL import Image, ImageTk
 
 
 from components.actions.receipt_payment_method.modal_cash_payment import show_cash_payment_modal
-
-
 from components.actions.receipt_payment_method.modal_cash_payment import insert_amount_receive
 
-from components.actions.receipt_payment_method.modal_cash_payment import show_cash_payment_modal
 
 
 class ReceiptContainer:
