@@ -47,10 +47,15 @@ def pie_chart(category_name):
     except Exception as e:
         print(f"Error - unable to connect / convert to data: {e}")
 
+
 def display_line_chart(frame, period='daily'):
     try:
         # Close previous figures to avoid overlap
         close_figures()
+
+        # Clear the frame before embedding a new figure
+        for widget in frame.winfo_children():
+            widget.pack_forget()
 
         # Use a fresh connection each time by creating it within the function
         with engine.connect() as db:
@@ -94,7 +99,15 @@ def display_line_chart(frame, period='daily'):
             canvas = FigureCanvasTkAgg(fig, master=frame)  # Attach figure to the frame
             canvas.draw()  # Draw the canvas
             canvas.get_tk_widget().pack(fill='both', expand=True)  # Make it fill the frame
-            plt.show()  # This will display the line chart in a separate window
 
+            # Ensure the Tkinter main loop is running
+            if not frame.winfo_ismapped():
+                frame.update_idletasks()
+                frame.update()
+
+            frame.update_idletasks()
+            frame.update()
+            
+            plt.show()
     except Exception as e:
         print(f"Error - unable to connect / convert to data: {e}")
