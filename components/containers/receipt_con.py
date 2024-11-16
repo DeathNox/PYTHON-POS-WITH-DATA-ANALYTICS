@@ -4,11 +4,8 @@ from datetime import datetime
 from db_setup.db_connect import db, mycursor
 from PIL import Image, ImageTk
 
-
-from components.actions.receipt_payment_method.modal_cash_payment import show_cash_payment_modal
 from components.actions.receipt_payment_method.modal_cash_payment import insert_amount_receive
-
-
+from components.actions.receipt_payment_method.modal_cash_payment import show_cash_payment_modal
 
 class ReceiptContainer:
     
@@ -83,7 +80,7 @@ class ReceiptContainer:
         self.payment_frame.grid_columnconfigure((0, 1), weight=1)
 
         # Cash Payment Button
-        cash_payment_btn_icon = Image.open("./imgs/receipt_icons/cash_payment.png")
+        cash_payment_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/receipt_icons/cash_payment.png")
         resized_icon = cash_payment_btn_icon.resize((30, 30))
         cash_payment_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
@@ -105,7 +102,7 @@ class ReceiptContainer:
         
 
         # E-Wallet Payment Button
-        e_wallet_payment_btn_icon = Image.open("./imgs/receipt_icons/e-wallet_payment.png")
+        e_wallet_payment_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/receipt_icons/e-wallet_payment.png")
         resized_icon = e_wallet_payment_btn_icon.resize((30, 30))
         e_wallet_payment_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
@@ -324,75 +321,17 @@ class ReceiptContainer:
     
     def process_order(self):
         from .home_con import hide_receipt_container
-        """Handle the process order button click and save the order to the database."""
-        if not self.items:  # Check if there are no items in the receipt
-            
+        if not self.items:
             self.notification_label.configure(fg_color="#ED4337")
             self.show_notification("Oops! Your receipt is empty")
-            
             from .home_con import reset_receipt_container
-            
-            
             self.window.after(2000, reset_receipt_container)
-            
-            
             self.window.after(2000, self.clear_receipt)
-            
             self.window.after(2000, hide_receipt_container)
-            
-            
-            return  
-        
-        
-        try:
-            for item in self.items.values():
-                product_id = self.get_product_id(item['name']) 
-                item_name = item['name']
-                quantity = item['quantity']
-                unit_price = item['price']
-                sub_total = item['total_price']
-                order_status = "Pending"
+            return
 
-           # DALE - New Column for tbl_sales
-                category = self.get_product_category(item_name) or 'Unknown Category' 
+        show_cash_payment_modal(self.get_subtotal(), self.handle_payment)
 
-
-                sql = """
-                    INSERT INTO tbl_purchase_order (product_id, quantity, unit_price, sub_total, order_date, order_status, item_name, product_category) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                """
-                values = (product_id, quantity, unit_price, sub_total, datetime.now(), order_status, item_name, category)
-
-                # Dale - Inserting into tbl_sales
-                sql2 = "INSERT INTO tbl_sales (product_id, product_name, product_category, quantity, unit_price, sub_total) VALUES (%s, %s, %s, %s, %s, %s)"
-
-                values2 = (product_id, item_name, category, quantity, unit_price, sub_total)
-
-                # Execute the query and commit the transaction
-                mycursor.execute(sql, values)
-                mycursor.execute(sql2, values2)
-                db.commit()
-            
-            # Show the notification
-            self.show_notification("Order placed successfully!")  # Display notification
-            
-            from .home_con import reset_receipt_container
-            
-            
-            self.window.after(2000, reset_receipt_container)
-            
-            
-            self.window.after(2000, self.clear_receipt)
-            
-            self.window.after(2000, hide_receipt_container)
-            
-            
-            
-            
-
-        except Exception as e:
-            print(f"Error processing order: {e}")
-            self.show_notification("Error processing order.")  # Display error notification
 
 
     def get_product_id(self, product_name):
@@ -408,7 +347,6 @@ class ReceiptContainer:
         except Exception as e:
             print(f"Error fetching product ID: {e}")
             return None
-
 
     def handle_payment(self, amount_received, change_amount, payment_method):
         from .home_con import hide_receipt_container
