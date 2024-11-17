@@ -204,15 +204,14 @@ class Modal_Generate_New_Product_Display:
             
             for combination in limited_suggestions:
                 product_name = generate_product_name(combination)  
-                
-                
-                
+                ingredients = combination
+
                 suggestion_frame = ctk.CTkFrame(self.suggestions_container, fg_color="#EBE0D6", width=520)
                 suggestion_frame.pack(fill="x", pady=5, padx=20)
 
-                # Left container 
+                # Left container
                 left_container = ctk.CTkFrame(suggestion_frame, fg_color="#EBE0D6")
-                left_container.grid(row=0, column=0, sticky="w") 
+                left_container.grid(row=0, column=0, sticky="w")
 
                 # Display product name
                 product_label = ctk.CTkLabel(
@@ -224,47 +223,33 @@ class Modal_Generate_New_Product_Display:
                 )
                 product_label.pack(padx=10, pady=5)
 
-               # Right container
+                # Right container
                 right_container = ctk.CTkFrame(suggestion_frame, fg_color="#EBE0D6")
-                right_container.grid(row=0, column=1, sticky="e")  
+                right_container.grid(row=0, column=1, sticky="e")
 
                 # Add button with icon
                 add_btn_icon = Image.open("./imgs/misc/add_product_icon.png")
-                resized_icon = add_btn_icon.resize((15, 15))  
+                resized_icon = add_btn_icon.resize((15, 15))
                 add_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(15, 15))
+
+            
+                def add_button_command(ingredients=ingredients):
+                    self.add_to_menu(ingredients)
 
                 add_button = ctk.CTkButton(
                     right_container,
                     image=add_btn_icon,
                     text="",
-                    command=lambda name=product_name: self.add_to_menu(name),
+                    command=add_button_command,
                     fg_color="#4CAF50",
                     font=("Inter", 12, "bold"),
                     width=30,  
                     height=30
                 )
-                add_button.pack(side="left", padx=(10, 5), pady=5)  
+                add_button.pack(side="left", padx=(10, 5), pady=5)
 
-              
-                custom_btn_icon = Image.open("./imgs/icons/custom_icon.png")
-                resized_icon = custom_btn_icon.resize((15, 15))  
-                custom_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(15, 15))
-
-                custom_button = ctk.CTkButton(
-                    right_container,
-                    image=custom_btn_icon,
-                    text="",
-                    fg_color="#4CAF50",
-                    font=("Inter", 12, "bold"),
-                    width=30,  
-                    height=30
-                )
-                custom_button.pack(side="left", padx=(5, 10), pady=5) 
-
-
-                suggestion_frame.grid_columnconfigure(0, weight=1) 
-                suggestion_frame.grid_columnconfigure(1, weight=0)  
-
+                suggestion_frame.grid_columnconfigure(0, weight=1)
+                suggestion_frame.grid_columnconfigure(1, weight=0)
 
         else:
             no_suggestions_label = ctk.CTkLabel(
@@ -280,17 +265,28 @@ class Modal_Generate_New_Product_Display:
 
 
 # ? ADDS THE GENERATED PRODUCT SA MENU
-# TODO: should pop up a modal to confirm the addition of the generated menu.
-    def add_to_menu(self, product_name):
-        print(f"Product '{product_name}' added to the menu!")  
+# TODO: should pop up a modal to allow the user to customize 
+    def add_to_menu(self, ingredients):
+        from .actions.modal_add_generate_product import Modal_Add_Generate_Product
+
+        self.modal.destroy()
+
+        modal = Modal_Add_Generate_Product()
+        modal.modal_add_generated_product(ingredients=ingredients)
 
 
-
-
-#? ALLOWS THE USER TO CUSTOMIZE THE GENERATED PRODUCT MENU 
-# TODO: should pop up a modal 
-
-    def customize_generated_product(self, product_name):
-        ...
         
+    def get_product_id_by_name(self, product_name):
         
+        product_row = self.products_df[self.products_df['product_name'] == product_name]
+        if not product_row.empty:
+            return product_row.iloc[0]['product_id']
+        return None 
+
+
+    def get_ingredients_for_product(self, product_id):
+        #
+        product_ingredients = self.ingredients_df[self.ingredients_df['product_id'] == product_id]
+        return product_ingredients['ingredient_name'].tolist() 
+    
+    
