@@ -185,38 +185,104 @@ def close_all_windows():
     open_windows.clear()  # Clear the list after closing all windows
 
 def open_product_modal(product_details):
+    
+    from main import CenterWindowToDisplay
+    
     if not product_details:
         print("No product details available.")
         return
 
     close_all_windows()
 
+
+
     modal = ctk.CTkToplevel()
     modal.title(f"Details for {product_details['product_name']}")
-    modal.geometry("400x300")
-
-    # Track this modal in the open windows list
+    modal.geometry(CenterWindowToDisplay(modal, 400, 300, modal._get_window_scaling()))
+    modal.resizable(False, False)
+    modal.configure(fg_color="#EBE0D6")
+    
     open_windows.append(modal)
 
-    # Display each detail with a label
-    name_label = ctk.CTkLabel(modal, text=f"Product Name: {product_details['product_name']}")
-    name_label.pack(pady=5)
+    # Display product name
+    product_name_frame = ctk.CTkFrame(modal, fg_color="transparent")
+    product_name_frame.pack(pady=5, padx=20, fill="x", anchor="w")  
 
-    category_label = ctk.CTkLabel(modal, text=f"Category: {product_details['product_category']}")
-    category_label.pack(pady=5)
+    name_label_bold = ctk.CTkLabel(product_name_frame, text="Product Name:", text_color="black", font=("Inter", 18, "bold"))
+    name_label_bold.pack(side="left", padx=(0, 5), anchor="w")
 
-    sales_label = ctk.CTkLabel(modal, text=f"Total Sales: {product_details['total_sales']}")
-    sales_label.pack(pady=5)
+    name_label_regular = ctk.CTkLabel(product_name_frame, text=product_details['product_name'], text_color="black", font=("Inter", 18))
+    name_label_regular.pack(side="left", anchor="w")
 
-    price_label = ctk.CTkLabel(modal, text=f"Unit Price: ₱{product_details['unit_price']}")
-    price_label.pack(pady=5)
+    # Display product category
+    category_frame = ctk.CTkFrame(modal, fg_color="transparent")
+    category_frame.pack(pady=5, padx=20, fill="x", anchor="w")  
 
-    revenue_label = ctk.CTkLabel(modal, text=f"Total Revenue: ₱{product_details['total_revenue']}")
-    revenue_label.pack(pady=5)
+    category_label_bold = ctk.CTkLabel(category_frame, text="Category:", text_color="black", font=("Inter", 18, "bold"))
+    category_label_bold.pack(side="left", padx=(0, 5), anchor="w")
+
+    category_label_regular = ctk.CTkLabel(category_frame, text=product_details['product_category'], text_color="black", font=("Inter", 18))
+    category_label_regular.pack(side="left", anchor="w")
+
+    header_frame = ctk.CTkFrame(modal, fg_color="#30211E")
+    header_frame.pack(padx=10, pady=(25, 0), fill="x")
+
+    header_frame.grid_columnconfigure(0, weight=1)
+    header_frame.grid_columnconfigure(1, weight=1)
+    header_frame.grid_columnconfigure(2, weight=1)
+
+    # Header labels
+    header_labels = ["Total Sales", "Unit Price", "Total Revenue"]
+    for col, header in enumerate(header_labels):
+        header_label = ctk.CTkLabel(
+            header_frame, 
+            text=header, 
+            font=("Inter", 18, "bold"), 
+            text_color="#F5F5F5"
+        )
+        header_label.grid(row=0, column=col, padx=10, pady=5, sticky="ew") 
+
+  
+    sales_table_frame = ctk.CTkFrame(modal, fg_color="#EBE0D6")
+    sales_table_frame.pack(padx=10, pady=(0, 10), fill="x")
+
+    # Configure columns for data rows
+    sales_table_frame.grid_columnconfigure(0, weight=1)
+    sales_table_frame.grid_columnconfigure(1, weight=1)
+    sales_table_frame.grid_columnconfigure(2, weight=1)
+
+    table_data = [
+        [product_details['total_sales'], f"₱{product_details['unit_price']}", f"₱{product_details['total_revenue']}"]
+    ]
+
+    # Populate table rows
+    for row_idx, row_data in enumerate(table_data):
+        for col_idx, cell_data in enumerate(row_data):
+            cell_label = ctk.CTkLabel(
+                sales_table_frame, 
+                text=cell_data, 
+                font=("Inter", 18, "bold"), 
+                text_color="#1E1E1E"
+            )
+            cell_label.grid(row=row_idx, column=col_idx, padx=10, pady=5, sticky="ew")  
+
+
+    # Close button
+    close_button = ctk.CTkButton(
+        modal, 
+        text="Close", 
+        command=modal.destroy, 
+        fg_color="#30211E", 
+        hover_color="#594A47", 
+        font=("Inter", 18, "bold")
+    )
+    close_button.pack(pady=(80, 0))
+
 
     # Ensure modal is removed from open_windows when closed
     modal.protocol("WM_DELETE_WINDOW", lambda: safe_remove_modal(modal))
     modal.mainloop()
+
 
 
 def safe_remove_modal(modal):
