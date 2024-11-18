@@ -8,9 +8,6 @@ import mysql.connector
 from db_setup.db_connect import mycursor, db
 from components.frames.header import HeaderFrame
 
-# TODO: sidepanel > add prod btn > redirect to this page - DONE
-# TODO: (???) the client can add their other products. - DONE
-
 
 
 
@@ -51,11 +48,8 @@ def prod_config_container(window, user_id):
         add_prod_lbl.pack(anchor="nw", pady=20, padx=25)
   
         card_frame = ctk.CTkFrame(container, fg_color="#E3D8CD", corner_radius=20, width=350, height=600)
-        card_frame.pack(padx=20, pady=20, side="left", anchor="n", fill="y", expand=False)
+        card_frame.pack(padx=20, pady=20, side="left", anchor="n", fill="y", expand=False)            
 
-            
-     
-        
         
         # Product Name Start
         
@@ -87,17 +81,8 @@ def prod_config_container(window, user_id):
 
 
         #Product Name End
-
-
-      
-      
-
-
+        
         # Product Image Start
-        
-        
-
-        
         prodImage_lbl = ctk.CTkLabel(
             
             card_frame,
@@ -140,8 +125,6 @@ def prod_config_container(window, user_id):
         image_label = ctk.CTkLabel(frame_image_section, text="", height=200, width=200, fg_color="#E4CFBB")
         image_label.grid(row=0, column=1, padx=5, pady=0)
 
-
-     
             
         prodImage_btn_upload.bind("<Enter>", on_enter)
         prodImage_btn_upload.bind("<Leave>", on_leave)
@@ -170,19 +153,11 @@ def prod_config_container(window, user_id):
     
         # ! product description end
 
-
-
-
-
-       
-        
-        
-        
         price_frame = ctk.CTkFrame(card_frame, fg_color="transparent")
         price_frame.grid(row=5, column=0, columnspan=2, padx=(10, 5), pady=(20, 5), sticky="w")
         
         
-            # Label for product price
+        # Label for product price
             
         product_price_lbl = ctk.CTkLabel(
         price_frame,
@@ -211,42 +186,6 @@ def prod_config_container(window, user_id):
         )
         product_price_entry.grid(row=0, column=1, padx=(5, 10), pady=(0, 0), sticky="w")
                 
-        """
-        # ! TENTATIVE
-        
-          # TODO: available sizes buttons (M, L or via Oz)
-          
-    
-        size_frame = ctk.CTkFrame(card_frame, fg_color="transparent")
-        size_frame.grid(row=6, column=0, columnspan=2, padx=10, pady=(10, 5), sticky="w")
-
-      
-        size_lbl = ctk.CTkLabel(size_frame, text="SIZES:", text_color="#372724", font=("Inter", 24, "bold"))
-        size_lbl.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-
-       
-       
-        # ??? tentative: baka prefer ng client is by Oz ex: 18oz and so on.
-        
-        medium_size_btn = ctk.CTkButton(size_frame, fg_color="#E4CFBB", text="M", text_color="#372724", font=("Inter", 24, "bold"),
-                                        width=100, height=40, command=lambda: toggle_size(medium_size_btn))
-        medium_size_btn.grid(row=0, column=1, padx=5, pady=5)
-
-        large_size_btn = ctk.CTkButton(size_frame, text="L", fg_color="#E4CFBB", text_color="#372724", font=("Inter", 24, "bold"),
-                                    width=100, height=40, command=lambda: toggle_size(large_size_btn))
-        large_size_btn.grid(row=0, column=2, padx=5, pady=5)
-
-
-
-        # toggle button sizes
-        def toggle_size(button):
-            if button.cget("fg_color") == "#E4CFBB":  # If not clicked
-                button.configure(fg_color="#372724", text_color="#EBE0D6")  # set it as clicked
-            else:
-                button.configure(fg_color="#E4CFBB", text_color="black")  # unclick
-        """
-        
-         # product category start
            
     # DALE - UPDATE   
         #product categories

@@ -80,7 +80,7 @@ class ReceiptContainer:
         self.payment_frame.grid_columnconfigure((0, 1), weight=1)
 
         # Cash Payment Button
-        cash_payment_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/receipt_icons/cash_payment.png")
+        cash_payment_btn_icon = Image.open("./imgs/receipt_icons/cash_payment.png")
         resized_icon = cash_payment_btn_icon.resize((30, 30))
         cash_payment_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
@@ -102,7 +102,7 @@ class ReceiptContainer:
         
 
         # E-Wallet Payment Button
-        e_wallet_payment_btn_icon = Image.open("C:/Users/Dale Chavez/Downloads/PointOfSales_Oct26/PointOfSales/imgs/receipt_icons/e-wallet_payment.png")
+        e_wallet_payment_btn_icon = Image.open("./imgs/receipt_icons/e-wallet_payment.png")
         resized_icon = e_wallet_payment_btn_icon.resize((30, 30))
         e_wallet_payment_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
