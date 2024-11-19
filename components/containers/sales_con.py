@@ -2,7 +2,7 @@ import customtkinter as ctk
 from ..actions.db.fetch_top_sellers import get_top_selling_items, get_top_selling_item_details
 from ..actions.db.fetch_sales import get_avg_order
 from components.actions.data_analytics.data_visualization import open_product_modal_pieChart, display_line_chart
-from .orders_con import get_total_income, get_profit
+from .orders_con import get_total_income, get_profit, get_total_income_today
 from ..actions.db.fetch_product_categories import get_product_categories
 
 
@@ -60,6 +60,7 @@ def sales_container(window, user_id):
     # Metric cards side by side in the same row
     # DALE - ADDING OF SALES 
     total_sales = get_total_income()  # Call the function to get the total sales value
+    total_sales_today = get_total_income_today()  # Call the function to get the total sales value
     profit = get_profit()
     display_value = f"{profit:.2f}"  # Format the total sales value as a string with two decimal places
 
@@ -68,7 +69,7 @@ def sales_container(window, user_id):
 
 
     create_metric_card(cards_display_frame, "TOTAL SALES REVENUE", total_sales, 0, 0)
-    create_metric_card(cards_display_frame, "SALES TODAY", total_sales, 0, 1)
+    create_metric_card(cards_display_frame, "SALES TODAY", total_sales_today, 0, 1)
     create_metric_card(cards_display_frame, "TOTAL INCOME", display_value, 0, 2)
     create_metric_card(cards_display_frame, "AVERAGE ORDER VALUE", display_value1, 0, 3)
 

@@ -3,9 +3,10 @@ import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from sqlalchemy import create_engine
 import customtkinter as ctk  
+import matplotlib.dates as mdates
 
 # Example for MySQL connection
-engine = create_engine('mysql+pymysql://root:root@localhost/pos_cafe')
+engine = create_engine('mysql+pymysql://root:password@localhost/pos_new')
 db = engine.connect()  # This creates a connection to the database
 
 def close_figures():
@@ -93,7 +94,7 @@ def display_line_chart(frame, period='daily'):
             ax.grid(True)
 
             # Format the x-axis labels to 'YY-MM-DD'
-            ax.xaxis.set_major_formatter(plt.FixedFormatter(df_agg.index.strftime('%y-%m-%d')))
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%y-%m-%d'))
 
             # Embed the Matplotlib figure in the Tkinter Frame
             canvas = FigureCanvasTkAgg(fig, master=frame)  # Attach figure to the frame
