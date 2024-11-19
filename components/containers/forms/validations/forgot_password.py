@@ -49,7 +49,7 @@ def Forgot_Password_Container(window):
 
     subtitle_label = ctk.CTkLabel(
         right_container,
-        text="No worries! Just enter your email address and username below, and verify it.",
+        text="No worries! Just enter your email address and username below, and we'll verify it.",
         text_color="#372724",
         font=("Inter", 20)
     )
