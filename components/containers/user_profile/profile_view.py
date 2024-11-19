@@ -5,8 +5,8 @@ import mysql.connector
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'root',
-    'database': 'pos_cafe'
+    'password': 'password',
+    'database': 'pos_new'
 }
 
 def open_profile(user_id, account_type):

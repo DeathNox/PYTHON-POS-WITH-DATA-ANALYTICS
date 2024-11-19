@@ -171,7 +171,7 @@ def sign_up_form_container(window):
             
 
       show_password_btn = ctk.CTkCheckBox(form_frame, text_color="#EBE0D6", text="Show Password", command=show_password, font=("Inter", 22))
-      show_password_btn.grid(row=8, column = 1, pady=(0, 0), padx=(100, 10), columnspan=2)
+      show_password_btn.grid(row=8, column = 1, pady=(0, 0), padx=(50, 10), columnspan=2)
 
       phone_number_label = ctk.CTkLabel(
             
