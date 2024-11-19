@@ -127,6 +127,13 @@ def get_total_income():
     # print(f"Total Income Calculated: {total_income}")  # Debugging line
     return total_income
 
+def get_total_income_today():
+    sql = "SELECT SUM(sub_total) FROM tbl_purchase_order WHERE order_status = 'Completed' AND DATE(order_date) = CURDATE()"
+    mycursor.execute(sql)
+    total_income = mycursor.fetchone()[0] or 0
+    # print(f"Total Income Calculated: {total_income}")  # Debugging line
+    return total_income
+
 # DALE - GET TOTAL INCOME
 def get_profit():
     sql = "SELECT SUM(sub_total) FROM tbl_purchase_order WHERE order_status = 'Completed'"

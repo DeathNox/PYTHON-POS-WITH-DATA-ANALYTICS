@@ -5,8 +5,8 @@ db = mysql.connector.connect (
       
       host = "localhost",
       user = "root",
-      password = "root",
-      database = "pos_cafe"
+      password = "password",
+      database = "pos_new"
       
 )
 

@@ -2,7 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def connect_to_database():
-    return create_engine("mysql+mysqlconnector://root:root@localhost/pos_cafe")
+    return create_engine("mysql+mysqlconnector://root:password@localhost/pos_new")
 
 def load_data():
     engine = connect_to_database()
