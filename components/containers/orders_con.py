@@ -51,7 +51,7 @@ def orders_container(window, user_id):
     header_frame.pack(fill="x")
 
     headers = ["Order #", "Date", "Item Name", "Quantity", "Total", "Status", "Action"]
-    col_widths = [150, 200, 200, 200, 200, 200, 200]
+    col_widths = [150, 200, 200, 150, 200, 200, 200]
 
     for idx, header in enumerate(headers):
         label = ctk.CTkLabel(
