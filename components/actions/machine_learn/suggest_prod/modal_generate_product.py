@@ -105,16 +105,7 @@ class Modal_Generate_New_Product_Display:
         )
         cancel_btn.pack(side="left", padx=(0, 10), pady=10)
 
-        # Save Button 
-        save_btn = ctk.CTkButton(
-            button_container,
-            text="Save",
-            font=("Inter", 20, "bold"),
-            width=100,
-            fg_color="#5482C7",
-            text_color="#F5F5F5"
-        )
-        save_btn.pack(side="right", padx=(10, 20), pady=10)
+
         
                 
     def on_generate_sales_combinations(self):
@@ -139,13 +130,16 @@ class Modal_Generate_New_Product_Display:
                 ingredient_category = row['ingredient_category']
                 count = row['count']
 
-                # Create a suggestion frame for each combination
                 suggestion_frame = ctk.CTkFrame(self.suggestions_container, fg_color="#EBE0D6", width=520)
                 suggestion_frame.pack(fill="x", pady=5, padx=20)
 
-                # Ingredient and category labels
+                # Left container for ingredient details
+                left_container = ctk.CTkFrame(suggestion_frame, fg_color="#EBE0D6")
+                left_container.grid(row=0, column=0, sticky="w")
+
+                # Display ingredient name and category
                 ingredient_label = ctk.CTkLabel(
-                    suggestion_frame,
+                    left_container,
                     text=f"{ingredient_name} ({ingredient_category})",
                     font=("Inter", 14, "italic"),
                     text_color="#1E1E1E"
@@ -154,13 +148,37 @@ class Modal_Generate_New_Product_Display:
 
                 # Display count (optional)
                 count_label = ctk.CTkLabel(
-                    suggestion_frame,
+                    left_container,
                     text=f"Count: {count}",
                     font=("Inter", 12),
                     text_color="#757575"
                 )
                 count_label.pack(anchor="w", padx=10)
 
+                # Right container for Add button
+                right_container = ctk.CTkFrame(suggestion_frame, fg_color="#EBE0D6")
+                right_container.grid(row=0, column=1, sticky="e")
+
+                # Add button with icon
+                add_btn_icon = Image.open("./imgs/misc/add_product_icon.png")
+                resized_icon = add_btn_icon.resize((15, 15))
+                add_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(15, 15))
+
+                add_button = ctk.CTkButton(
+                    right_container,
+                    image=add_btn_icon,
+                    text="",
+                    command=lambda ing=[ingredient_name]: self.add_to_menu(ing),
+                    fg_color="#4CAF50",
+                    font=("Inter", 12, "bold"),
+                    width=30,
+                    height=30
+                )
+                add_button.pack(side="left", padx=(10, 5), pady=5)
+
+                # Configure grid layout
+                suggestion_frame.grid_columnconfigure(0, weight=1)
+                suggestion_frame.grid_columnconfigure(1, weight=0)
         else:
             no_combinations_label = ctk.CTkLabel(
                 self.suggestions_container,

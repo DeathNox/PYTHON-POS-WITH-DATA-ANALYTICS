@@ -174,13 +174,31 @@ class Modal_Add_Generate_Product:
             if var.get() in self.selected_ingredients:
                 self.selected_ingredients.remove(var.get())  
 
-    def add_new_product_to_menu(self, product_name, category, price):
-          
-      # TODO !!  
-       ...
+    def add_new_product_to_menu(self, product_name, price, category):
+        try:
+            cursor = db.cursor()
 
+            insert_unit_query = """
+            INSERT INTO tbl_product_unit (unit_name)
+            VALUES (%s)
+            """
+            cursor.execute(insert_unit_query, (product_name,))
+            
+            unit_id = cursor.lastrowid
 
+            insert_query = """
+            INSERT INTO tbl_products (product_name, product_price, product_category, product_image, unit_id, product_status)
+            VALUES (%s, %s, %s, NULL, %s, 'Available')
+            """
+            cursor.execute(insert_query, (product_name, category, price, unit_id))
+            
 
+            db.commit()
+            cursor.close()
+            print("Product added successfully!")
+            self.modal.destroy()  # Close the modal after saving
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
 
     def get_product_categories(self):
         categories = []
