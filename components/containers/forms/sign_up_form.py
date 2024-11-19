@@ -320,7 +320,7 @@ def handle_signup(username_entry, password_entry, firstname_entry, lastname_entr
 
 
     def show_error_message(message, form_frame):
-        error_frame = ctk.CTkFrame(form_frame, fg_color="#F8D7DA")  
+        error_frame = ctk.CTkFrame(form_frame, fg_color="#F8D7DA", width=100)  
         error_frame.grid(padx=28, pady=(10, 10), sticky="nsew")  
         error_label = ctk.CTkLabel(error_frame, text=message, text_color="#721C24", font=("Inter", 20, "bold"))
         error_label.grid(pady=(10, 10), padx=(10, 80))
@@ -331,6 +331,10 @@ def handle_signup(username_entry, password_entry, firstname_entry, lastname_entr
     
     if not username or not password or not firstname or not lastname or not email_address or not phone_number or not role_choice:
         show_error_message("All fields are required. Please fill out the form.", form_frame)
+        return
+  
+    if len(password) < 8:
+        show_error_message("Password must be at least 8 characters.", form_frame)
         return
  
     success = create_user_account(username, password, firstname, lastname, phone_number, role_choice, email_address,)
