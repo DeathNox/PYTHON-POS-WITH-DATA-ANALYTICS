@@ -64,7 +64,8 @@ def display_line_chart(frame, period='daily'):
             query = """
             SELECT order_date, SUM(sub_total) as total_sale
             FROM tbl_sales
-            GROUP BY order_date
+            WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) and DATE(order_date) <= CURDATE()
+            GROUP BY order_date 
             """
             df = pd.read_sql_query(query, db)
             

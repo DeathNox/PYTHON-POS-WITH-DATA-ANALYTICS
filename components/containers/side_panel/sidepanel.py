@@ -17,7 +17,7 @@ def side_panel(window):
     global ctk_menu_icon, ctk_orders_icon, ctk_product_icon, ctk_sales_btn_icon, ctk_inventory_btn_icon, ctk_signout_icon  
 
  
-    side_panel = tk.Frame(window, bg="#E4CFBB", width=65)  
+    side_panel = tk.Frame(window, bg="#E4CFBB", width=185)  
     side_panel.pack_propagate(False)
     side_panel.pack(side="left", fill="y", padx=8, pady=8)
 
