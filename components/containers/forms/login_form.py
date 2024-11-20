@@ -145,10 +145,12 @@ def login_form_container(window):
         text="Forgot password?", 
         text_color="#EBE0D6",
         font=("Inter", 20, "underline"),
-        cursor="hand2"  
+        cursor="hand2"
+       
     )
+    
     forgot_password_label.pack(pady=(15, 40), anchor="e", padx=(0, 28))  
-
+    forgot_password_label.bind("<Button 1>", lambda event: redirect_to_forgot_password(window, event))
     
     login_button = ctk.CTkButton(
         right_container,
@@ -254,6 +256,15 @@ def redirect_to_signup(window):
         widget.pack_forget()
         
     sign_up_form_container(window)
+
+def redirect_to_forgot_password(window, event=None):
+    
+    from .validations.forgot_password import Forgot_Password_Container
+    
+    for widget in window.winfo_children():
+        widget.pack_forget()
+        
+    Forgot_Password_Container(window)
 
 
 

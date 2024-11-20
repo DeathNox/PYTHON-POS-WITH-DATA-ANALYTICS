@@ -51,7 +51,7 @@ def orders_container(window, user_id):
     header_frame.pack(fill="x")
 
     headers = ["Order #", "Date", "Item Name", "Quantity", "Total", "Status", "Action"]
-    col_widths = [150, 200, 200, 200, 200, 200, 200]
+    col_widths = [150, 200, 200, 150, 200, 200, 200]
 
     for idx, header in enumerate(headers):
         label = ctk.CTkLabel(
@@ -218,6 +218,27 @@ def fetch_orders(frame, col_widths):
             )
             status_dropdown.set(order_status)
             status_dropdown.grid(row=row_idx, column=10, padx=(5,20), pady=10, sticky="ew")
+            
+            
+              # Cancel Button
+            cancel_btn_icon = Image.open("./imgs/icons/cancel_icon.png")
+            resized_icon = cancel_btn_icon.resize((30, 30))  
+            cancel_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
+
+            action_cancel_button = ctk.CTkButton(
+            frame,
+            text="", 
+            image=cancel_icon,
+            command=lambda oid=order_id, frame=frame, col_widths=col_widths: cancel_order(oid, frame, col_widths),
+            font=("Inter", 16, "bold"),
+            fg_color="#FF5733",
+            text_color="white",
+            width=40,  
+            height=40  
+                )
+
+            action_cancel_button.grid(row=row_idx, column=16, padx=5, pady=10)
+            
 
             # View Button
             view_btn_icon = Image.open("./imgs/icons/view_icon.png")
@@ -254,6 +275,13 @@ def fetch_orders(frame, col_widths):
                 height=40  
             )
             action_print_button.grid(row=row_idx, column=14, padx=5, pady=10)
+            
+            
+            
+            
+            
+            
+            
 
                 # Add a horizontal line below each row
             ctk.CTkFrame(frame, fg_color="black", height=1).grid(row=row_idx + 1, column=0, columnspan=15, sticky="ew", pady=(0, 10))
@@ -261,6 +289,34 @@ def fetch_orders(frame, col_widths):
 
     except Exception as e:
         print(f"Error fetching orders: {e}")
+        
+
+
+def cancel_order(order_id, frame, col_widths):
+    try:
+        # Delete related payment records from tbl_payments first
+        sql = "DELETE FROM tbl_payments WHERE purchase_order_id = %s"
+        mycursor.execute(sql, (order_id,))
+        db.commit()
+        
+        # Now delete the order from tbl_purchase_order
+        sql = "DELETE FROM tbl_purchase_order WHERE purchase_order_id = %s"
+        mycursor.execute(sql, (order_id,))
+        db.commit()
+
+        print(f"Order {order_id} and related payments have been canceled.")
+        
+        # Refresh the display: clear the frame and reload orders
+        for widget in frame.winfo_children():
+            widget.grid_forget()  
+
+        fetch_orders(frame, col_widths)  
+        
+    except Exception as e:
+        print(f"Error canceling order: {e}")
+        
+        
+
 def view_order_details(order_id):
     """
     Function to handle the action when the "View" button is clicked.
@@ -739,3 +795,4 @@ def get_product_id(product_name):
         except Exception as e:
             print(f"Error fetching product ID: {e}")
             return None
+    
