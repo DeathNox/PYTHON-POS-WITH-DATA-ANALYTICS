@@ -39,7 +39,7 @@ def orders_container(window, user_id):
 
     create_metric_card(metrics_frame, "             Total Orders              ", total_orders_value, 0)
     orders_in_progress_label = create_metric_card(metrics_frame, "             Orders in Progress              ", orders_in_progress_value, 1)
-    total_income_label = create_metric_card(metrics_frame, "                Total Income              ", f"PHP {get_total_income():,.2f}", 3)
+    total_income_label = create_metric_card(metrics_frame, "                Sales Today              ", f"PHP {get_total_income_today()}", 3)
     completed_orders_label = create_metric_card(metrics_frame, "              Completed Orders              ", completed_orders_value, 2)
 
    
@@ -146,7 +146,7 @@ def get_profit():
 
 def fetch_orders(frame, col_widths):
     try:
-        sql = "SELECT purchase_order_id, order_date, item_name, quantity, sub_total, order_status FROM tbl_purchase_order"
+        sql = "SELECT purchase_order_id, order_date, item_name, quantity, sub_total, order_status FROM tbl_purchase_order ORDER BY purchase_order_id DESC"
         mycursor.execute(sql)
         orders = mycursor.fetchall()
 
@@ -294,10 +294,6 @@ def fetch_orders(frame, col_widths):
 
 def cancel_order(order_id, frame, col_widths):
     try:
-        # Delete related payment records from tbl_payments first
-        sql = "DELETE FROM tbl_payments WHERE purchase_order_id = %s"
-        mycursor.execute(sql, (order_id,))
-        db.commit()
         
         # Now delete the order from tbl_purchase_order
         sql = "DELETE FROM tbl_purchase_order WHERE purchase_order_id = %s"
@@ -637,8 +633,6 @@ def update_order_status(order_id, new_status, old_status):
             order_details["sub_total"]
         )
 
-        # Refresh total income display
-        total_income_label.configure(text=f"PHP {get_total_income():,.2f}")
 
     except Exception as e:
         print(f"Error updating order status: {e}")
@@ -653,7 +647,7 @@ def update_metrics_on_status_change(old_status, new_status, order_subtotal, prod
     completed_orders_label.configure(text=f"{completed_orders_value}")
 
     # adjust total income based on status change
-    current_income = get_total_income()  
+    current_income = get_total_income_today()  
     print(f"Current Total Income: {current_income}")
 
     # Adjust total income and insert into tbl_sales if status changes to 'Completed'
