@@ -219,7 +219,6 @@ def fetch_orders(frame, col_widths):
             status_dropdown.set(order_status)
             status_dropdown.grid(row=row_idx, column=10, padx=(5,20), pady=10, sticky="ew")
             
-            
               # Cancel Button
             cancel_btn_icon = Image.open("./imgs/icons/cancel_icon.png")
             resized_icon = cancel_btn_icon.resize((30, 30))  
@@ -294,8 +293,10 @@ def fetch_orders(frame, col_widths):
 
 def cancel_order(order_id, frame, col_widths):
     try:
-        
-        # Now delete the order from tbl_purchase_order
+        sql = "DELETE FROM tbl_payments WHERE purchase_order_id = %s"
+        mycursor.execute(sql, (order_id,))
+        db.commit()
+
         sql = "DELETE FROM tbl_purchase_order WHERE purchase_order_id = %s"
         mycursor.execute(sql, (order_id,))
         db.commit()
@@ -769,11 +770,20 @@ def process_order(self):
 
     # DALE - query for tbl_sales
 def insert_into_sales(product_id, item_name, category, quantity, unit_price, sub_total):
-        """Insert a sales record into tbl_sa les."""
-        sql2 = "INSERT INTO tbl_sales (product_id, product_name, product_category, quantity, unit_price, sub_total) VALUES (%s, %s, %s, %s, %s, %s)"
-        values2 = (product_id, item_name, category, quantity, unit_price, sub_total)
+    """Insert a sales record into tbl_sales."""
+    try:
+        # Fetch the last inserted purchase_order_id
+        mycursor.execute("SELECT purchase_order_id FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 1")
+        last_purchase_order_id = mycursor.fetchone()[0]
+
+        # Insert the sales record, omitting the invoice_id as it's auto-incremented
+        sql2 = "INSERT INTO tbl_sales (sales_id, product_id, product_name, product_category, quantity, unit_price, sub_total) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        values2 = (last_purchase_order_id, product_id, item_name, category, quantity, unit_price, sub_total)
         mycursor.execute(sql2, values2)
         db.commit()
+    except Exception as e:
+        print(f"Error inserting into sales: {e}")
+        db.rollback()
 
 
 def get_product_id(product_name):
@@ -789,4 +799,3 @@ def get_product_id(product_name):
         except Exception as e:
             print(f"Error fetching product ID: {e}")
             return None
-    
