@@ -13,7 +13,7 @@ def create_metric_card(frame, title, value, row, col):
 
 
     card = ctk.CTkFrame(frame, fg_color="#60514E", corner_radius=10, width=cards_width, height=cards_height)  
-    card.grid(row=row, column=col, padx=(30, 0), pady=10)
+    card.grid(row=row, column=col, padx=(40, 0), pady=(20, 30))
 
     label_title_frame = ctk.CTkFrame(card, fg_color="#60514E", width=cards_width)
     label_title_frame.pack(fill="both", expand=False, pady=(8, 0))  
