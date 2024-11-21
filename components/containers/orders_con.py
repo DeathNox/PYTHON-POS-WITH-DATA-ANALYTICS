@@ -81,7 +81,7 @@ def create_metric_card(frame, title, value, col):
 
 
     card = ctk.CTkFrame(frame, fg_color="#60514E", corner_radius=10, width=cards_width, height=cards_height)  
-    card.grid(row=0, column=col, padx=15, pady=10)
+    card.grid(row=0, column=col, padx=(35, 15), pady=(20, 0))
 
     
     label_title_frame = ctk.CTkFrame(card, fg_color="#60514E", width=cards_width)
