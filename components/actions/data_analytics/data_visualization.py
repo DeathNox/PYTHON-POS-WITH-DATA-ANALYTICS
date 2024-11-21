@@ -5,6 +5,9 @@ from sqlalchemy import create_engine
 import customtkinter as ctk  
 import matplotlib.dates as mdates
 
+from matplotlib.ticker import MaxNLocator
+from cycler import cycler
+
 # Example for MySQL connection
 engine = create_engine('mysql+pymysql://root:password@localhost/pos_new')
 db = engine.connect()  # This creates a connection to the database
@@ -86,16 +89,37 @@ def display_line_chart(frame, period='daily'):
             else:
                 raise ValueError("Invalid period. Choose from 'daily', 'weekly', or 'monthly'.")
 
+            # Define a custom color palette
+            custom_palette = ['#4E79A7', '#F28E2B', '#FBFBFB', '#76B7B2', '#59A14F']
+
+
+            # Apply the custom palette to Matplotlib
+            plt.rc('axes', prop_cycle=cycler('color', custom_palette))
+            plt.rcParams['axes.facecolor'] = '#EBE0D6'
+            plt.rcParams['figure.facecolor'] = '#30211E'
+            
+            # Update rcParams for consistent text colors
+            plt.rcParams['text.color'] = '#1E1E1E'  # Light color for general text
+            plt.rcParams['axes.labelcolor'] = '#FBFBFB'  # Light color for axis labels
+            plt.rcParams['xtick.color'] = '#FBFBFB'  # Light color for x-tick labels
+            plt.rcParams['ytick.color'] = '#FBFBFB'  # Light color for y-tick labels
+            plt.rcParams['axes.titlecolor'] = '#EBE0D6'  # Light color for title
+
+            
+        
+        
             # Create the Matplotlib figure and plot
             fig, ax = plt.subplots(figsize=(6, 4))
-            ax.plot(df_agg.index, df_agg['total_sale'], marker='o', color='g')
-            ax.set_title(f'Cumulative Sales Revenue ({period.capitalize()})')
-            ax.set_xlabel('Date')
-            ax.set_ylabel('Sales Revenue')
-            ax.grid(True)
+            ax.plot(df_agg.index, df_agg['total_sale'], marker='o', label='Sales Revenue')
+            ax.set_title(f'Cumulative Sales Revenue ({period.capitalize()})', fontsize=14)
+            ax.set_xlabel('Date', fontsize=12)
+            ax.set_ylabel('Sales Revenue', fontsize=12)
+            ax.grid(True, linestyle='--', alpha=0.7)
+            ax.legend(loc='upper left', fontsize=10)
 
             # Format the x-axis labels to 'YY-MM-DD'
             ax.xaxis.set_major_formatter(mdates.DateFormatter('%y-%m-%d'))
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))  # Ensure clean integer tick spacing
 
             # Embed the Matplotlib figure in the Tkinter Frame
             canvas = FigureCanvasTkAgg(fig, master=frame)  # Attach figure to the frame
@@ -103,10 +127,6 @@ def display_line_chart(frame, period='daily'):
             canvas.get_tk_widget().pack(fill='both', expand=True)  # Make it fill the frame
 
             # Ensure the Tkinter main loop is running
-            if not frame.winfo_ismapped():
-                frame.update_idletasks()
-                frame.update()
-
             frame.update_idletasks()
             frame.update()
             

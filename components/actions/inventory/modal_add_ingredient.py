@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk 
 
+from tkinter import messagebox
+
 class Modal_Add_Ingredient_Display:
  
  
@@ -193,7 +195,7 @@ class Modal_Add_Ingredient_Display:
 
         # Check for required field inputs
         if not ingredient_name or associated_product == "Select a product" or ingredient_category == "Select a category":
-            ctk.messagebox.showerror("Error", "Please fill in all required fields.")
+            tk.messagebox.showerror("Error", "Please fill in all required fields.")
             return
 
         # Fetch product_id from associated product name

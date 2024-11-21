@@ -74,7 +74,7 @@ def sales_container(window, user_id):
     create_metric_card(cards_display_frame, "AVERAGE ORDER VALUE", display_value1, 0, 3)
 
     # Container for analytics
-    analytics_frame = ctk.CTkFrame(container, fg_color="#372724", height=425, width=400, corner_radius=10)
+    analytics_frame = ctk.CTkFrame(container, fg_color="#372724", height=480, width=815, corner_radius=10)
     analytics_frame.grid(row=2, column=0, padx=(50, 50), pady=(2, 20), sticky="nsew")
 
     # Analytics header
@@ -82,17 +82,17 @@ def sales_container(window, user_id):
     analytics_frame_header.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
     # Title label for the analytics frame
-    header_label = ctk.CTkLabel(analytics_frame_header, text="CASH FLOW",
-                                font=("Inter", 18, "bold"),
-                                fg_color="#372724", text_color="#FFFFFF", width=370)
-    header_label.grid(row=0, column=0, padx=50, pady=(10, 10))
+    header_label = ctk.CTkLabel(analytics_frame_header, text="Cash Flow Analytic",
+                                font=("Inter", 22, "bold"),
+                                fg_color="#372724", text_color="#FFFFFF", anchor="center")
+    header_label.grid(row=0, column=0, padx=(250, 400), pady=(10, 10))
 
     # Prevent grid propagation to maintain sizing
     analytics_frame.grid_propagate(0)
 
     # Analytics Data Frame (for displaying cash flow)
-    analytics_data_frame = ctk.CTkFrame(analytics_frame, fg_color="#F1EBEB", height=350, width=580)
-    analytics_data_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+    analytics_data_frame = ctk.CTkFrame(analytics_frame, fg_color="#F1EBEB", height=450, width=800)
+    analytics_data_frame.grid(row=1, column=0, padx=(20, 20), pady=(10, 20), sticky="nsew")
 
     # Add a label with the message "Click to view"
     click_to_view_label = ctk.CTkLabel(analytics_data_frame, text="Click to view", fg_color="#F1EBEB", text_color="#000000")
@@ -115,15 +115,16 @@ def sales_container(window, user_id):
 
 
     # Top Products Frame 
-    best_sellers_frame = ctk.CTkFrame(container, fg_color="#372724", height=200, width=600, corner_radius=10)
-    best_sellers_frame.grid(row=2, column=1, padx=(10, 30), pady=(2, 20), sticky="nw")
+    best_sellers_frame = ctk.CTkFrame(container, fg_color="#372724", height=200, width=515, corner_radius=10)
+    best_sellers_frame.grid(row=2, column=1, padx=(20, 30), pady=(2, 10), sticky="nw")
 
     best_sellers_frame.grid_propagate(0)
+    best_sellers_frame.grid_columnconfigure(0, weight=1)
     
     # Title label for the top sellers frame
-    header_label = ctk.CTkLabel(best_sellers_frame, text="TOP-SELLING PRODUCTS",
-                                font=("Inter", 18, "bold"), corner_radius=5,
-                                fg_color="#372724", text_color="#FFFFFF", width=580, height=45)
+    header_label = ctk.CTkLabel(best_sellers_frame, text="Top Selling Products",
+                                font=("Inter", 20, "bold"), corner_radius=5,
+                                fg_color="#372724", text_color="#FFFFFF", width=500, height=45)
     header_label.grid(row=0, column=0, padx=10, pady=(5, 5))
 
     # Fetch top-selling items
@@ -137,23 +138,26 @@ def sales_container(window, user_id):
             best_sellers_frame,
             text=f"{item_name}",
             command=lambda details=top_selling_itemDetails: open_product_modal(details),
-            font=("Inter", 16, "bold"),
-            height=40, fg_color="#F1EBEB", width=580, border_color="black", text_color="#372724",
+            font=("Inter", 18, "bold"),
+            height=40, fg_color="#EBE0D6", width=500, border_color="black", text_color="#1E1E1E",
             cursor="hand2"
         )
-        button.grid(row=1 + idx, column=0, padx=10, pady=4, sticky="w")
+        button.grid(row=1 + idx, column=0, padx=(50, 50), pady=4, sticky="w")
 
 
     # DALE - New Container
     # DALE - Adding of Current Categories for Analysis
-    new_container = ctk.CTkFrame(container, fg_color="#372724", width=150, height=150, corner_radius=10)
-    new_container.grid(row=2, column=1, columnspan=2, padx=(16,170), pady=(250, 20), sticky="nsew")
+    new_container = ctk.CTkFrame(container, fg_color="#372724",height=150, width = 650, corner_radius=10)
+    new_container.grid(row=2, column=1, columnspan=2, padx=(20, 50), pady=(220, 20), sticky="nsew")
+
+    new_container.grid_propagate(0)
+    new_container.grid_columnconfigure(0, weight=1)
 
     # Label for new container
     new_container_label = ctk.CTkLabel(new_container, text="Product Category Analysis",
                                     font=("Inter", 18, "bold"),
                                     text_color="#FFFFFF")
-    new_container_label.pack(pady=(10, 10), padx=10)
+    new_container_label.pack(pady=(20, 20), padx=10)
 
  
     # Fetch and display each category name as a button
@@ -166,11 +170,11 @@ def sales_container(window, user_id):
             new_container,
             text=f"{category}",
             command=lambda name=category: open_product_modal_pieChart(name),
-            font=("Inter", 14),
-            height=40, fg_color="#F1EBEB", width=580, border_color="black", text_color="#372724",
+            font=("Inter", 18, "bold"),
+            height=40, fg_color="#EBE0D6", width=500, border_color="black", text_color="#1E1E1E",
             cursor="hand2"
         )
-        category_button.pack(anchor="w", padx=10, pady=4)
+        category_button.pack(anchor="w", padx=(50, 50), pady=4)
 
 
     return container
