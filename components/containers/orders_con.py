@@ -128,7 +128,7 @@ def get_total_income():
     return total_income
 
 def get_total_income_today():
-    sql = "SELECT SUM(sub_total) FROM tbl_purchase_order WHERE order_status = 'Completed' AND DATE(order_date) = CURDATE()"
+    sql = "SELECT SUM(sub_total) FROM tbl_sales WHERE DATE(order_date) = CURDATE()"
     mycursor.execute(sql)
     total_income = mycursor.fetchone()[0] or 0
     # print(f"Total Income Calculated: {total_income}")  # Debugging line
@@ -658,13 +658,13 @@ def update_metrics_on_status_change(old_status, new_status, order_subtotal, prod
         print(f"Income adjusted by subtracting {order_subtotal}: New Income: {new_income}")
 
     elif old_status in ["Pending", "In Progress"] and new_status == "Completed":
-        
-        # DALE - Insert sales record into tbl_sales
+        # Insert sales record into tbl_sales
         insert_into_sales(product_id, item_name, category, quantity, unit_price, sub_total)
         
-        new_income = current_income + order_subtotal
+        # Update total income after marking as completed
+        new_income = get_total_income_today()
         total_income_label.configure(text=f"PHP {new_income:,.2f}")
-        print(f"Income adjusted by adding {order_subtotal}: New Income: {new_income}")
+        print(f"Updated Total Income after marking as completed: {new_income}")
 
     # debugging print statements
     print(f"Updated Income after status change from '{old_status}' to '{new_status}': {total_income_label.cget('text')}")
@@ -730,7 +730,6 @@ def process_order(self):
                 sub_total = item['total_price']
                 order_status = "Pending"
 
-           # DALE - New Column for tbl_sales
                 category = self.get_product_category(item_name) or 'Unknown Category' 
 
 
