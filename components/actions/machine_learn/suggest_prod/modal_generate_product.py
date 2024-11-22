@@ -58,7 +58,7 @@ class Modal_Generate_New_Product_Display:
         # Generate product button
         generate_product_btn = ctk.CTkButton(
             container,
-            text="Generate Combinations",
+            text="Generate Combinations from Ingredients",
             fg_color="#5482C7",
             font=("Inter", 18, "bold"),
             width=70,
@@ -67,13 +67,13 @@ class Modal_Generate_New_Product_Display:
             cursor="hand2",
             command=self.on_generate_combinations
         )
-        generate_product_btn.pack(pady=(10, 0), padx=(30, 30))
+        generate_product_btn.pack(pady=(10, 0), padx=(20, 30))
         
         
          # Generate combinations based on sales button
         generate_sales_combinations_btn = ctk.CTkButton(
             container,
-            text="Generate Sales Combinations",
+            text="Generate Combinations from Sold Products",
             fg_color="#4CAF50",
             font=("Inter", 18, "bold"),
             width=70,
@@ -82,7 +82,7 @@ class Modal_Generate_New_Product_Display:
             cursor="hand2",
             command=self.on_generate_sales_combinations
         )
-        generate_sales_combinations_btn.pack(pady=(10, 0), padx=(30, 30))
+        generate_sales_combinations_btn.pack(pady=(10, 0), padx=(20, 30))
         
 
         # Suggestions Display Section
