@@ -210,13 +210,18 @@ def fetch_orders(frame, col_widths):
             status_dropdown = ctk.CTkOptionMenu(
                 frame,
                 values=status_options,
-                command=lambda status, oid=order_id, old_status=order_status: update_order_status(oid, status, old_status),
+                command=lambda status, oid=order_id, old_status=order_status: update_order_status(oid, status, old_status, frame, col_widths),
                 text_color="white",
                 font=("Inter", 16, "bold"),
                 width=col_widths[5],
                 fg_color="#6F5E5C"
             )
             status_dropdown.set(order_status)
+            
+            # Disable the dropdown if the status is "Completed"
+            if order_status == "Completed":
+                status_dropdown.configure(state="disabled")
+            
             status_dropdown.grid(row=row_idx, column=10, padx=(5,20), pady=10, sticky="ew")
             
               # Cancel Button
@@ -604,7 +609,7 @@ def get_order_details(order_id):
     else:
         raise ValueError(f"No details found for Order ID {order_id}")
 
-def update_order_status(order_id, new_status, old_status):
+def update_order_status(order_id, new_status, old_status, frame, col_widths):
     """
     Updates the order status in the database and refreshes the metrics if the status is changed.
     """
@@ -634,10 +639,13 @@ def update_order_status(order_id, new_status, old_status):
             order_details["sub_total"]
         )
 
+        # Refresh the orders to update the dropdown list
+        for widget in frame.winfo_children():
+            widget.grid_forget()  
+        fetch_orders(frame, col_widths)
 
     except Exception as e:
         print(f"Error updating order status: {e}")
-
 
 
 def update_metrics_on_status_change(old_status, new_status, order_subtotal, product_id, item_name, category, quantity, unit_price, sub_total):
