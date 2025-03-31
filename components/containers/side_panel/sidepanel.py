@@ -124,18 +124,6 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
     # == END Sales styling btn ===
 
     # == START Inventory styling btn ==
-    inventory_btn_icon = Image.open("./imgs/sidepanel_icons/inventory_icon.png")
-    resized_icon = inventory_btn_icon.resize((30, 40))
-    ctk_inventory_btn_icon = CTk.CTkImage(dark_image=resized_icon, size=(30, 30))
-
-    inventory_btn = CTk.CTkButton(side_panel, text="Inventory", image=ctk_inventory_btn_icon,
-                                  font=("Inter", 18, "bold"),
-                                  compound="left",
-                                  fg_color="#372724",
-                                  text_color="#EBE0D6", width=1000,
-                                  command=switch_to_inventory_frame)
-
-    inventory_btn.pack(pady=10, padx=10)
     # == END Inventory styling btn
 
     # START - signout btn styling

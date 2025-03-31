@@ -81,26 +81,7 @@ def display_products(window, user_id):
     
       add_products_redirect.grid(row=0, column=0, padx=(20, 10), pady=(150, 5), sticky="e") 
 
-
-         # Generate Product Btn
-      generate_product_icon = Image.open("./imgs/icons/chat-gpt.png")
-      resized_icon = generate_product_icon.resize((30, 30))
-      generate_product_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
-
-      generate_product = ctk.CTkButton(
-      container,
-      text="",
-      image=generate_product_icon,
-      fg_color="#5482C7",
-      width=70,
-      height=40,
-      corner_radius=15,
-      cursor="hand2",
-      command=Modal_Generate_New_Product_Display
-      )
-
     
-      generate_product.grid(row=0, column=6, padx=(50, 10), pady=(150, 5), sticky="w") 
 
       table_frame = ctk.CTkFrame(container, fg_color="#372724", corner_radius=10)
       table_frame.pack(padx=20, pady=(150, 10), fill="both", expand=True)
