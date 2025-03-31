@@ -34,7 +34,7 @@ CREATE TABLE `tbl_users` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email_address` (`email_address`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `tbl_users` (
 
 LOCK TABLES `tbl_users` WRITE;
 /*!40000 ALTER TABLE `tbl_users` DISABLE KEYS */;
-INSERT INTO `tbl_users` VALUES (3,'Midnite','$2b$12$fi2PXGYyYxgyYpJYnKZzc.vgJnaUYJHuP8Mbob8fZNzBmhnRKzkvO','Midnite','Chavez','09989309646','Employee','dlchavez0619qc@student.fatima.edu.ph'),(4,'dale','$2b$12$9/meCrQNGBlPXd96qEZZFuCZbMHABpD0u.TyHoSzU8wAKkF3QUUBC','dale','chavez','09918023812','Employee','dalechavez018@gmail.com'),(5,'Cvztec','$2b$12$261b.mebCGhr5pBapEWkS.FFY8r3N6WcBafcsjOjySU1hO5AxE.7q','Dale','Chavez','09918023812','Admin','dalechaevz018@gmail.com');
+INSERT INTO `tbl_users` VALUES (1,'admin','$2b$12$DybW2CgHcIMqtfJ6b3/4KeDi1lhSjd.s/vCRYUiECCT59HDXbhG2W','Default','Admin','1234567890','Admin','admin@example.com');
 /*!40000 ALTER TABLE `tbl_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 15:19:30
+-- Dump completed on 2025-03-31 23:03:12

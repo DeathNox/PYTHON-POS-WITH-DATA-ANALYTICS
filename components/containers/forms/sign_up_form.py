@@ -210,7 +210,7 @@ def sign_up_form_container(window):
       role_choice_label.grid(row = 9, column=1, pady=(25, 10), padx=(15, 10), sticky="w")
       
       
-      role_options = ['Employee', 'Admin']
+      role_options = ['Employee']
       
       role_choice_optMenu = ctk.CTkOptionMenu(
             form_frame,
