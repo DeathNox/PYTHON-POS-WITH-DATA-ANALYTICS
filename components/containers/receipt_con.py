@@ -7,6 +7,9 @@ from PIL import Image, ImageTk
 from components.actions.receipt_payment_method.modal_cash_payment import insert_amount_receive
 from components.actions.receipt_payment_method.modal_cash_payment import show_cash_payment_modal
 
+from .global_variable.global_var import logged_in_user
+
+
 class ReceiptContainer:
     
     def is_valid(self):
@@ -17,8 +20,9 @@ class ReceiptContainer:
         """Return the current subtotal value."""
         return self.subtotal
     
-    def __init__(self, window):
+    def __init__(self, window, logged_in_user):
         self.window = window
+        self.logged_in_user = logged_in_user  # Store logged_in_user as an instance variable
         
         self.frame = ctk.CTkFrame(window, fg_color="#372724", width=300, height=895, corner_radius=5)
         self.frame.pack_propagate(False)
@@ -348,6 +352,7 @@ class ReceiptContainer:
             print(f"Error fetching product ID: {e}")
             return None
 
+    # DALE - Handle payment method for tbl_purchase_order sa orders
     def handle_payment(self, amount_received, change_amount, payment_method):
         from .home_con import hide_receipt_container
 
@@ -362,12 +367,14 @@ class ReceiptContainer:
 
                 category = self.get_product_category(item_name) or 'Unknown Category'
 
+                if self.logged_in_user is None:
+                    raise ValueError("Logged-in user is not defined.")
+                    
                 sql = """
-                    INSERT INTO tbl_purchase_order (product_id, quantity, unit_price, sub_total, order_date, order_status, item_name, product_category) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO tbl_purchase_order (product_id, quantity, unit_price, sub_total, order_date, order_status, item_name, product_category, payment_method, cashier_name) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
-                values = (product_id, quantity, unit_price, sub_total, datetime.now(), order_status, item_name, category)
-
+                values = (product_id, quantity, unit_price, sub_total, datetime.now(), order_status, item_name, category, payment_method, self.logged_in_user)
                 mycursor.execute(sql, values)
                 db.commit()
 
@@ -381,4 +388,4 @@ class ReceiptContainer:
 
         except Exception as e:
             print(f"Error processing order: {e}")
-            self.show_notification("Error processing order: {e}")
+            self.show_notification(f"Error processing order: {e}")

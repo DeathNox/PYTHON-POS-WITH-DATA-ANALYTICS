@@ -4,6 +4,7 @@ import customtkinter as CTk
 from components.containers.side_panel.navigation import switch_to_orders, switch_to_home, switch_to_sales_con, \
     switch_to_prod_view, switch_to_inventory_con, log_out
 
+from components.containers.global_variable.global_var import account_type
 
 is_expanded = False
 side_panel = None  
@@ -54,10 +55,7 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
         switch_to_home(window, content_frame, user_id=user_id)
 
     def switch_to_view_prod_frame():
-        switch_to_prod_view(window, content_frame, user_id=user_id)
-
-    def switch_to_inventory_frame():
-        switch_to_inventory_con(window, content_frame, user_id=user_id)
+        switch_to_prod_view(window, content_frame, user_id=user_id, user_role=account_type)
 
     def log_out_frame():
         log_out(window, content_frame, side_panel)
@@ -121,6 +119,19 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
                                   command=lambda: switch_to_sales_con(window, content_frame, user_id, account_type))
 
         sales_btn.pack(pady=10, padx=10)
+  
+    if account_type != "Employee":
+        sales_btn_icon = Image.open("./imgs/sidepanel_icons/sales_icon.png")
+        resized_icon = sales_btn_icon.resize((30, 40))
+        ctk_sales_btn_icon = CTk.CTkImage(dark_image=resized_icon, size=(30, 30))
+
+        performance_btn = CTk.CTkButton(side_panel, text="Performance", image=ctk_sales_btn_icon,
+                                  font=("Inter", 18, "bold"),
+                                  compound="left", fg_color="#372724",
+                                  text_color="#EBE0D6", width=1000,
+                                  command=lambda: switch_to_sales_con(window, content_frame, user_id, account_type))
+
+        performance_btn.pack(pady=10, padx=10)
     # == END Sales styling btn ===
 
     # == START Inventory styling btn ==

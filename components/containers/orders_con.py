@@ -6,6 +6,8 @@ from components.frames.header import HeaderFrame
 from decimal import Decimal, ROUND_HALF_UP
 from datetime import datetime
 
+from .global_variable.global_var import logged_in_user
+
 def orders_container(window, user_id):
   
 
@@ -146,7 +148,7 @@ def get_profit():
 
 def fetch_orders(frame, col_widths):
     try:
-        sql = "SELECT purchase_order_id, order_date, item_name, quantity, sub_total, order_status FROM tbl_purchase_order ORDER BY purchase_order_id DESC"
+        sql = "SELECT purchase_order_id, order_date, item_name, quantity, sub_total, order_status FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 50"
         mycursor.execute(sql)
         orders = mycursor.fetchall()
 

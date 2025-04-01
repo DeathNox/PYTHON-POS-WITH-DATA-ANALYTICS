@@ -200,11 +200,11 @@ def login_form_container(window):
 def handle_login(username, password, window, error_frame, error_label):
     from components.containers.forms.validations.verify_credentials import verify_user_credentials
     
-    success, message, user_id, account_type = verify_user_credentials(username, password)
+    success, message, user_id, account_type, logged_in_user = verify_user_credentials(username, password)
 
     if success:
         print("Login successful!")
-        print(f"User ID: {user_id}, Account Type: {account_type}")  # You now have the user_id and account_type
+        print(f"User ID: {user_id}, Employee Name: {logged_in_user}, Account Type: {account_type}")  # You now have the user_id and account_type
         redirect_to_home(window, user_id, account_type)  # Pass account_type here
         error_frame.pack_forget() 
         error_label.configure(text="")  
