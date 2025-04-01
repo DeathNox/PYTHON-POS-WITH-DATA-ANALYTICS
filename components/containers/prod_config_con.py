@@ -12,7 +12,7 @@ from components.frames.header import HeaderFrame
 
 
 
-def prod_config_container(window, user_id):
+def prod_config_container(window, user_id, user_role):  # Add user_role here
 
         global product_price_entry, prodName_entry, image_label, product_description_entry
     
@@ -36,8 +36,8 @@ def prod_config_container(window, user_id):
         return_label.configure(image=return_btn_icon)
         return_label.pack(side="left", padx=(20, 10), pady=15)
 
-  
-        return_label.bind("<Button-1>", lambda e: return_to_main(window, user_id))
+        # Pass user_role to return_to_main
+        return_label.bind("<Button-1>", lambda e: return_to_main(window, user_id, user_role))
       
         
   
@@ -495,11 +495,11 @@ def clear_fields():
     image_path = None
 
 
-def return_to_main(window, user_id):
+def return_to_main(window, user_id, user_role):  # Add user_role here
 
     from components.containers.products_con import display_products
 
     for widget in window.winfo_children():
-        widget.pack_forget()  
-        
-    display_products(window, user_id=user_id)  
+        widget.pack_forget()
+
+    display_products(window, user_id=user_id, user_role=user_role)

@@ -25,14 +25,14 @@ def reset_receipt_container():
 
 
 # Pang setup ng receipt -> then show 
-def setup_receipt_container(window):
+def setup_receipt_container(window, logged_in_user):
     from components.containers.receipt_con import ReceiptContainer
     
     global receipt_container
     
     if receipt_container is None:
         print("Initializing ReceiptContainer")
-        receipt_container = ReceiptContainer(window)
+        receipt_container = ReceiptContainer(window, logged_in_user)
         print("ReceiptContainer initialized, but not packed.")
         
         
@@ -68,7 +68,7 @@ def fetch_products():
 
 
 # If the user clicks an item to order, this function handles the process of putting it sa receipt.
-def on_card_click(product_name, product_price, quantity_entry, window):
+def on_card_click(product_name, product_price, quantity_entry, window, logged_in_user):
     global receipt_container
     try:
         quantity_text = quantity_entry.get().strip()
@@ -82,7 +82,7 @@ def on_card_click(product_name, product_price, quantity_entry, window):
         # Setup the receipt container if it's None
         if receipt_container is None:
             print("Setting up the ReceiptContainer because it's None.")
-            setup_receipt_container(window)  
+            setup_receipt_container(window, logged_in_user)  
         
         if receipt_container:
             receipt_container.add_item(product_name, product_price, quantity)
@@ -199,7 +199,7 @@ def home_container(window, user_id):
         button_frame.pack(pady=(10, 10), padx=5, fill="x")
 
         add_button = ctk.CTkButton(button_frame, text="ORDER", font=("Inter", 24, "bold"), fg_color="#372724",
-                                    command=lambda name=name, price=price, quantity_entry=quantity_spinbox: on_card_click(name, price, quantity_entry, window))
+                                    command=lambda name=name, price=price, quantity_entry=quantity_spinbox: on_card_click(name, price, quantity_entry, window, user_id))
         add_button.pack(pady=5, padx=5)
 
     # Configure the last row to expand if needed

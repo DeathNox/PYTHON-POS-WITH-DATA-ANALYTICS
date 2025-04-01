@@ -1,4 +1,3 @@
-
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
@@ -7,7 +6,7 @@ from io import BytesIO
 from PIL import Image, ImageTk
 from components.actions.db.fetch_products import get_all_products
 from components.frames.header import HeaderFrame
-from components.actions.machine_learn.suggest_prod.modal_generate_product import Modal_Generate_New_Product_Display
+
 
 STATUS_OPTIONS = ["Available", "Not Available"]
 
@@ -36,9 +35,9 @@ def get_product_details(product_name):
     finally:
         mycursor.close()
 
-def display_products(window, user_id):
+def display_products(window, user_id, user_role):
       
-     
+      print(f"user_role: {user_role}")  # Debugging line
       
       container = ctk.CTkFrame(window, fg_color="#EBE0D6", width=1275, height=900, corner_radius=2)
       container.pack_propagate(False)
@@ -59,27 +58,28 @@ def display_products(window, user_id):
       )
       prod_lbl.pack(anchor="nw", pady=20, padx=25)
 
-   # Add Products Button
-      add_btn_icon = Image.open("./imgs/misc/add_product_icon.png")
-      resized_icon = add_btn_icon.resize((30, 30))
-      add_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
+   # Add Products Button (only for admin users)
+      if user_role == "Admin":  # Check if the user has admin privileges
+          add_btn_icon = Image.open("./imgs/misc/add_product_icon.png")
+          resized_icon = add_btn_icon.resize((30, 30))
+          add_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
-      add_products_redirect = ctk.CTkButton(
-      container,
-      text="ADD NEW PRODUCT",
-      image=add_btn_icon,
-      font=("Inter", 16, "bold"),
-      fg_color="#5482C7",
-      text_color="white",
-      width=70,
-      height=40,
-      corner_radius=15,
-      cursor="hand2",
-      command=lambda: redirect_to_add_product(window, user_id)
-      )
+          add_products_redirect = ctk.CTkButton(
+              container,
+              text="ADD NEW PRODUCT",
+              image=add_btn_icon,
+              font=("Inter", 16, "bold"),
+              fg_color="#5482C7",
+              text_color="white",
+              width=70,
+              height=40,
+              corner_radius=15,
+              cursor="hand2",
+              command=lambda: redirect_to_add_product(window, user_id, user_role)  # Pass user_role here
+          )
+              
+          add_products_redirect.grid(row=0, column=0, padx=(20, 10), pady=(150, 5), sticky="e") 
 
-    
-      add_products_redirect.grid(row=0, column=0, padx=(20, 10), pady=(150, 5), sticky="e") 
 
     
 
@@ -219,14 +219,13 @@ def display_products(window, user_id):
 
 
 
-def redirect_to_add_product(window, user_id):
-      
-  from components.containers.prod_config_con import prod_config_container
-  for widget in window.winfo_children():
+def redirect_to_add_product(window, user_id, user_role):
+    from components.containers.prod_config_con import prod_config_container
+    for widget in window.winfo_children():
         widget.destroy()  
     
-
-  prod_config_container(window, user_id=user_id)
+    # Pass the user_role argument
+    prod_config_container(window, user_id=user_id, user_role=user_role)
   
   
 
