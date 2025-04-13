@@ -1,0 +1,11 @@
+customtkinter==5.2.2
+cycler==0.12.1
+fpdf==1.7.2
+matplotlib==3.10.1
+mysql_connector_repackaged==0.3.1
+numpy==2.2.4
+pandas==2.2.3
+Pillow==11.2.1
+python_bcrypt==0.3.2
+scikit_learn==1.6.1
+SQLAlchemy==2.0.40
