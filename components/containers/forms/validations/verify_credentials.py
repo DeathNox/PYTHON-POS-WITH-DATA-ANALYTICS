@@ -18,13 +18,13 @@ def verify_user_credentials(username, entered_password):
             logged_in_user = result[3]  # Update the global variable
             # Verify the entered password against the hashed password
             if bcrypt.checkpw(entered_password.encode('utf-8'), hashed_password.encode('utf-8')):
-                return True, "success", user_id, account_type, logged_in_user  # Return 4 values (user_id, account_type)
+                return True, "success", user_id, account_type, logged_in_user  # Return 5 values
             else:
-                return False, "password_incorrect", None, None  # Password is incorrect
+                return False, "password_incorrect", None, None, None  # Password is incorrect
         else:
-            return False, "username_not_found", None, None  # User not found
+            return False, "username_not_found", None, None, None  # User not found
 
     except Exception as e:
         print(f"Error: {e}")
-        return False, str(e), None, None  # Return the error message along with None for missing values
+        return False, str(e), None, None, None  # Return the error message along with None for missing values
 
