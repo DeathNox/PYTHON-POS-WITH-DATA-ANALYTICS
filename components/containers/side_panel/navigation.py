@@ -74,6 +74,15 @@ def switch_to_sales_con(window, content_frame, user_id, account_type):
         sales_frame = sales_container(content_frame, user_id)  # Remove account_type
         sales_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
 
+def switch_to_performance_con(window, content_frame, user_id, account_type):
+    if account_type != "Employee":  
+        from components.containers.sales_con import performance_container
+        for widget in content_frame.winfo_children():
+            widget.destroy()
+            
+        sales_frame = performance_container(content_frame, user_id)  # Remove account_type
+        sales_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+
 
     
 

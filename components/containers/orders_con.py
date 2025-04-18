@@ -784,10 +784,13 @@ def insert_into_sales(product_id, item_name, category, quantity, unit_price, sub
         # Fetch the last inserted purchase_order_id
         mycursor.execute("SELECT purchase_order_id FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 1")
         last_purchase_order_id = mycursor.fetchone()[0]
+        
+        mycursor.execute("SELECT cashier_name FROM tbl_purchase_order ORDER BY purchase_order_id DESC LIMIT 1")
+        last_cashier_id = mycursor.fetchone()[0]
 
         # Insert the sales record, omitting the invoice_id as it's auto-incremented
-        sql2 = "INSERT INTO tbl_sales (sales_id, product_id, product_name, product_category, quantity, unit_price, sub_total) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        values2 = (last_purchase_order_id, product_id, item_name, category, quantity, unit_price, sub_total)
+        sql2 = "INSERT INTO tbl_sales (sales_id, product_id, product_name, product_category, quantity, unit_price, sub_total, cashier_name) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        values2 = (last_purchase_order_id, product_id, item_name, category, quantity, unit_price, sub_total, last_cashier_id)
         mycursor.execute(sql2, values2)
         db.commit()
     except Exception as e:
