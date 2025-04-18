@@ -231,16 +231,13 @@ def redirect_to_home(window, user_id, account_type):
         widget.pack_forget()
     
     from components.containers.home_con import home_container
-    from components.containers.side_panel.sidepanel import side_panel, sidepanel_options
+    from components.containers.side_panel.sidepanel import create_side_panel, sidepanel_options
     
-    
-    side_panel_frame = side_panel(window)  
+    side_panel_frame = create_side_panel(window)  # Call the renamed function
     side_panel_frame.pack(side="left", fill="y", padx=8, pady=8)  
 
-   
     content_frame = home_container(window, user_id)  
     content_frame.pack(side="left", fill="both", expand=True) 
-    
     
     sidepanel_options(side_panel_frame, window, content_frame, user_id=user_id, account_type=account_type)
 

@@ -2,7 +2,7 @@ from PIL import Image, ImageTk
 import tkinter as tk
 import customtkinter as CTk
 from components.containers.side_panel.navigation import switch_to_orders, switch_to_home, switch_to_sales_con, \
-    switch_to_prod_view, switch_to_inventory_con, log_out
+    switch_to_prod_view, switch_to_inventory_con, log_out, switch_to_performance_con
 
 from components.containers.global_variable.global_var import account_type
 
@@ -13,11 +13,10 @@ side_panel = None
 menu_btn, orders_btn, view_products_btn, sales_btn, inventory_btn, signout_btn = [None] * 6
 ctk_menu_icon = ctk_orders_icon = ctk_product_icon = ctk_sales_btn_icon = ctk_inventory_btn_icon = ctk_signout_icon = None
 
-def side_panel(window):
+def create_side_panel(window):  # Renamed function
     global side_panel, menu_btn, orders_btn, view_products_btn, sales_btn, inventory_btn, signout_btn  
     global ctk_menu_icon, ctk_orders_icon, ctk_product_icon, ctk_sales_btn_icon, ctk_inventory_btn_icon, ctk_signout_icon  
 
- 
     side_panel = tk.Frame(window, bg="#E4CFBB", width=185)  
     side_panel.pack_propagate(False)
     side_panel.pack(side="left", fill="y", padx=8, pady=8)
@@ -33,7 +32,6 @@ def side_panel(window):
 
     # Label to toggle side panel width
     label = tk.Label(side_panel, bg="#E4CFBB")
-    # Bind click to toggle
     label.pack(pady=10)
 
     return side_panel
@@ -129,7 +127,7 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
                                   font=("Inter", 18, "bold"),
                                   compound="left", fg_color="#372724",
                                   text_color="#EBE0D6", width=1000,
-                                  command=lambda: switch_to_sales_con(window, content_frame, user_id, account_type))
+                                  command=lambda: switch_to_performance_con(window, content_frame, user_id, account_type))
 
         performance_btn.pack(pady=10, padx=10)
     # == END Sales styling btn ===
@@ -148,7 +146,7 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
                                 compound="left",
                                 fg_color="#372724",
                                 text_color="#EBE0D6", width=1000,
-                                command=log_out_frame)
+                                command=go_to_log_out_handler)
 
     signout_btn.pack(side="bottom", pady=10, padx=10)
     # END - signout btn styling
@@ -212,3 +210,30 @@ def animate_side_panel(panel, start_width, end_width):
 
     # Start the animation process
     change_width(start_width, end_width)
+    
+def go_to_log_out_handler():
+      try:
+            log_out_handler()
+      except Exception as e:
+            print(f"Error @ redirect_to_sign_in: {e}")
+            
+def log_out_handler():
+    try:
+        from components.containers.forms.login_form import login_form_container
+
+        # Check if side_panel exists and is valid
+        if side_panel is None or not side_panel.winfo_exists():
+            print("Error: side_panel does not exist or has already been destroyed.")
+            return
+
+        # Destroy the current window's children
+        root = side_panel.winfo_toplevel()  # Get the existing Tk instance
+        for widget in root.winfo_children():
+            widget.destroy()
+
+        # Load the login form in the existing Tk instance
+        sign_in_frame = login_form_container(root)
+        sign_in_frame.pack()
+
+    except Exception as e:
+        print(f"Error in log_out: {e}")

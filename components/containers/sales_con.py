@@ -4,6 +4,9 @@ from ..actions.db.fetch_sales import get_avg_order
 from components.actions.data_analytics.data_visualization import open_product_modal_pieChart, display_line_chart
 from .orders_con import get_total_income, get_profit, get_total_income_today
 from ..actions.db.fetch_product_categories import get_product_categories
+from ..actions.db.fetch_employee_sales import get_employee_sales_performance  # Import the database function
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 # Function to create a metric card
@@ -296,3 +299,47 @@ def safe_remove_modal(modal):
     except ValueError:
         pass  # Ignore if modal is not in the list
     modal.destroy()
+    
+    
+def performance_container(window, user_id):
+    # Main container frame for sales overview
+    container = ctk.CTkFrame(window, fg_color="#EBE0D6", width=1275, height=900, corner_radius=2)
+    container.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    # Call the function to display the bar graph
+    display_employee_sales_performance(container)
+
+    return container
+
+def display_employee_sales_performance(container):
+    # Fetch data from the database
+    employee_sales_data = get_employee_sales_performance()  # Returns a list of tuples [(employee_name, sales), ...]
+    print("Raw employee sales data:", employee_sales_data)  # Debugging output
+
+    # Filter out invalid data (e.g., None values or invalid types)
+    from decimal import Decimal  # Ensure Decimal is imported
+
+    valid_data = [(name, sales) for name, sales in employee_sales_data if isinstance(name, str) and isinstance(sales, (int, float, Decimal))]
+    print("Valid employee sales data:", valid_data)  # Debugging output
+
+    # Separate the data into two lists for plotting
+    employee_names = [data[0] for data in valid_data]
+    sales_performance = [data[1] for data in valid_data]
+
+    # Check if there's valid data to plot
+    if not employee_names or not sales_performance:
+        print("No valid employee sales data available to display.")
+        return
+
+    # Create the bar graph using matplotlib
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(employee_names, sales_performance, color='skyblue')
+    ax.set_title('Employee Sales Performance', fontsize=16)
+    ax.set_xlabel('Employee Names', fontsize=12)
+    ax.set_ylabel('Sales Performance', fontsize=12)
+    ax.tick_params(axis='x', rotation=0)
+
+    # Embed the matplotlib figure into the Tkinter container
+    canvas = FigureCanvasTkAgg(fig, master=container)
+    canvas.draw()
+    canvas.get_tk_widget().pack(fill='both', expand=True)
