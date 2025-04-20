@@ -7,7 +7,7 @@ from ..actions.db.fetch_product_categories import get_product_categories
 from ..actions.db.fetch_employee_sales import get_employee_sales_performance  # Import the database function
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
+from tkinter import messagebox
 
 # Function to create a metric card
 def create_metric_card(frame, title, value, row, col):
@@ -306,10 +306,31 @@ def performance_container(window, user_id):
     container = ctk.CTkFrame(window, fg_color="#EBE0D6", width=1275, height=900, corner_radius=2)
     container.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-    # Call the function to display the bar graph
-    display_employee_sales_performance(container)
+    # Add a "Generate Report" button
+    generate_report_button = ctk.CTkButton(
+        container,
+        text="Generate Report",
+        command=lambda: on_generate_report_click(generate_report_button, container),
+        font=("Inter", 18, "bold"),
+        fg_color="#60514E",
+        text_color="white",
+        hover_color="#372724",
+        corner_radius=10,
+        width=200,
+        height=50
+    )
+    generate_report_button.pack(pady=(20, 10))  # Adjust padding as needed
 
     return container
+
+
+def on_generate_report_click(button, container):
+    # Hide the button
+    button.pack_forget()
+
+    # Call the function to display the employee sales performance
+    display_employee_sales_performance(container)
+
 
 def display_employee_sales_performance(container):
     # Fetch data from the database
@@ -329,6 +350,7 @@ def display_employee_sales_performance(container):
     # Check if there's valid data to plot
     if not employee_names or not sales_performance:
         print("No valid employee sales data available to display.")
+        messagebox.showinfo("No Data", "No valid employee sales data available to display today.")
         return
 
     # Create the bar graph using matplotlib
@@ -342,4 +364,13 @@ def display_employee_sales_performance(container):
     # Embed the matplotlib figure into the Tkinter container
     canvas = FigureCanvasTkAgg(fig, master=container)
     canvas.draw()
-    canvas.get_tk_widget().pack(fill='both', expand=True)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(fill='both', expand=True)
+
+    # Add a cleanup function to destroy the canvas and close the figure
+    def cleanup_graph():
+        canvas_widget.destroy()  # Destroy the Tkinter widget
+        plt.close(fig)  # Close the matplotlib figure
+
+    # Bind the cleanup function to the container's destroy event
+    container.bind("<Destroy>", lambda event: cleanup_graph())

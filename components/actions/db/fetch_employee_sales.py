@@ -11,11 +11,12 @@ def get_employee_sales_performance():
         )
         cursor = connection.cursor()
 
-        # Query to fetch employee sales performance
+        # Query to fetch employee sales performance for today
         query = """
         SELECT u.first_name AS cashier_name, SUM(s.sub_total) AS total_sales
         FROM tbl_sales s
         JOIN tbl_users u ON s.cashier_name = u.user_id
+        WHERE DATE(s.order_date) = CURDATE()
         GROUP BY u.first_name;
         """
         cursor.execute(query)
