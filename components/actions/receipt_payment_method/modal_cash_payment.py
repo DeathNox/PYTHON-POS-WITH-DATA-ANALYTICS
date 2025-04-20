@@ -114,6 +114,15 @@ def show_cash_payment_modal(orders_total, on_payment_confirmed):
     )
     php_lbl.grid(row=1, column=0, padx=(30, 5), pady=(5, 10), sticky="w")
 
+    # Define a validation function
+    def validate_numeric_input(value):
+        if value == "" or value.isdigit() or (value.count('.') == 1 and value.replace('.', '').isdigit()):
+            return True
+        return False
+
+    # Register the validation function
+    validate_command = modal.register(validate_numeric_input)
+
     # Entry for the amount received
     amount_received_entry = ctk.CTkEntry(
         amount_received_frame,
@@ -121,7 +130,9 @@ def show_cash_payment_modal(orders_total, on_payment_confirmed):
         fg_color="#E9E6E6",
         text_color="#1E1E1E",
         width=120,
-        border_width=1
+        border_width=1,
+        validate="key",
+        validatecommand=(validate_command, "%P")  # %P passes the current value of the entry
     )
     amount_received_entry.grid(row=1, column=1, padx=(5, 10), pady=(5, 10), sticky="w")
 

@@ -104,28 +104,6 @@ class ReceiptContainer:
         
         self.cash_payment_btn.grid(row=1, column=0, padx=(25, 10), pady=(5, 15), sticky="e")  
         
-
-        # E-Wallet Payment Button
-        e_wallet_payment_btn_icon = Image.open("./imgs/receipt_icons/e-wallet_payment.png")
-        resized_icon = e_wallet_payment_btn_icon.resize((30, 30))
-        e_wallet_payment_btn_icon = ctk.CTkImage(dark_image=resized_icon, size=(30, 30))
-
-        self.ewallet_payment_btn = ctk.CTkButton(
-            self.payment_frame,
-            text="",
-            font=("Inter", 20, "bold"),
-            image=e_wallet_payment_btn_icon,
-            fg_color="#372724",
-            width=100,
-            height=35,
-            corner_radius=5,
-        )
-        self.ewallet_payment_btn.grid(row=1, column=1, padx=(10, 25), pady=(5, 15), sticky="w")  
-
-        # ? Payment Method Container / Frame - End
-
-
-        
       
         self.summary_frame = ctk.CTkFrame(self.frame, fg_color="#EBE0D6")
         self.summary_frame.pack(side="bottom", fill="x", padx=5, pady=10)
