@@ -196,8 +196,12 @@ def login_form_container(window):
 
 # ! Functionality ng Form - Start
 
+# Add a global variable to track failed attempts
+failed_attempts = 0
+MAX_ATTEMPTS = 3  # Define the maximum number of allowed attempts
 
 def handle_login(username, password, window, error_frame, error_label):
+    global failed_attempts  # Use the global variable to track attempts
     from components.containers.forms.validations.verify_credentials import verify_user_credentials
     
     success, message, user_id, account_type, logged_in_user = verify_user_credentials(username, password)
@@ -208,15 +212,23 @@ def handle_login(username, password, window, error_frame, error_label):
         redirect_to_home(window, user_id, account_type)  # Pass account_type here
         error_frame.pack_forget() 
         error_label.configure(text="")  
+        failed_attempts = 0  # Reset the counter on successful login
     else:
+        failed_attempts += 1  # Increment the counter on failed login
+        remaining_attempts = MAX_ATTEMPTS - failed_attempts  # Calculate remaining attempts
         error_label.configure(text="") 
+        
         if message == "password_incorrect":
-            error_label.configure(text="Sorry, that password isn't right. Please try again.")
+            error_label.configure(text=f"Sorry, that password isn't right. You have {remaining_attempts} attempt(s) left.")
         elif message == "username_not_found":
-            error_label.configure(text="Sorry, we couldn't find an account with that username.")
+            error_label.configure(text=f"Sorry, we couldn't find an account with that username. You have {remaining_attempts} attempt(s) left.")
 
         error_frame.place(x=100, y=10)
 
+        # Check if the failed attempts have reached the maximum
+        if failed_attempts >= MAX_ATTEMPTS:
+            print("Too many failed attempts. Closing the application.")
+            window.quit()  # Close the application
         
         
 content_frame = None
