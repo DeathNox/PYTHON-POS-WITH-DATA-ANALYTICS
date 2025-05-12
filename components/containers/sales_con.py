@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from ..actions.db.fetch_top_sellers import get_top_selling_items, get_top_selling_item_details
 from ..actions.db.fetch_sales import get_avg_order
-from components.actions.data_analytics.data_visualization import open_product_modal_pieChart, display_line_chart
+from components.actions.data_analytics.data_visualization import open_product_modal_pieChart, display_line_chart, cash_flow_linegraph_weekly, cash_flow_linegraph_monthly, export_tbl_sales_to_excel
 from .orders_con import get_total_income, get_profit, get_total_income_today
 from ..actions.db.fetch_product_categories import get_product_categories
 from ..actions.db.fetch_employee_sales import get_employee_sales_performance  # Import the database function
@@ -84,6 +84,26 @@ def sales_container(window, user_id):
     analytics_frame_header = ctk.CTkFrame(analytics_frame, fg_color="#372724")
     analytics_frame_header.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
+
+    analytics_data_fr = ctk.CTkFrame(analytics_frame, width=800, height=400, corner_radius=10, fg_color="#F2F1EF")
+    analytics_data_fr.grid(row=1, column=0, padx=20, pady=(20, 20), sticky="nsew")
+
+    # Adjust the placement of the buttons to align them horizontally above the chart
+    button_frame = ctk.CTkFrame(container, fg_color="transparent")
+    button_frame.place(x = 80, y= 240)
+
+    ctk.CTkButton(button_frame, text="Daily", fg_color="#382C26", bg_color="transparent", text_color="#E9E4DB", hover_color="#6C635A", width=80,
+              cursor="hand2", font=("Poppins", 14, "bold"), command=lambda: display_line_chart(analytics_data_fr, 'daily')).grid(row=0, column=0, padx=(0, 10))
+
+    ctk.CTkButton(button_frame, text="Weekly", fg_color="#382C26", bg_color="transparent", text_color="#E9E4DB", hover_color="#6C635A", width=80,
+              cursor="hand2", font=("Poppins", 14, "bold"), command=lambda: cash_flow_linegraph_weekly(analytics_data_fr, 'weekly')).grid(row=0, column=1, padx=(0, 10))
+
+    ctk.CTkButton(button_frame, text="Monthly", fg_color="#382C26", bg_color="transparent", text_color="#E9E4DB", hover_color="#6C635A", width=80,
+              cursor="hand2", font=("Poppins", 14, "bold"), command=lambda: cash_flow_linegraph_monthly(analytics_data_fr, 'monthly')).grid(row=0, column=2, padx=(0, 10))
+
+    ctk.CTkButton(button_frame, text="Export Report", fg_color="#382C26", bg_color="transparent", text_color="#E9E4DB", hover_color="#6C635A", width=120,
+                  cursor="hand2", font=("Poppins", 14, "bold"), command=export_tbl_sales_to_excel).grid(row=0, column=3, padx=(0, 10))
+
     # Title label for the analytics frame
     header_label = ctk.CTkLabel(analytics_frame_header, text="Cash Flow Analytic",
                                 font=("Inter", 22, "bold"),
@@ -94,26 +114,13 @@ def sales_container(window, user_id):
     analytics_frame.grid_propagate(0)
 
     # Analytics Data Frame (for displaying cash flow)
-    analytics_data_frame = ctk.CTkFrame(analytics_frame, fg_color="#F1EBEB", height=450, width=800)
-    analytics_data_frame.grid(row=1, column=0, padx=(20, 20), pady=(10, 20), sticky="nsew")
 
-    # Add a label with the message "Click to view"
-    click_to_view_label = ctk.CTkLabel(analytics_data_frame, text="Click to view", fg_color="#F1EBEB", text_color="#000000")
-    click_to_view_label.place(relx=0.5, rely=0.5, anchor="center")
-
-    # Event handler to display the line chart
-    def on_analytics_frame_click(event):
-        display_line_chart(analytics_data_frame)
 
     # Bind the click event to the analytics_data_frame
-    analytics_data_frame.bind("<Button-1>", on_analytics_frame_click)
 
     # Grids
     analytics_frame.grid_rowconfigure(1, weight=1)
     analytics_frame.grid_columnconfigure(0, weight=1)
-    
-    analytics_data_frame.grid_rowconfigure(0, weight=1)
-    analytics_data_frame.grid_columnconfigure(0, weight=1)
 
 
 
@@ -185,6 +192,9 @@ def sales_container(window, user_id):
 # DALE 
 
 open_windows = []
+
+# Keep track of scheduled after events
+scheduled_after_events = []
 
 def close_all_windows():
     """Closes all open Tkinter windows."""
@@ -295,6 +305,11 @@ def open_product_modal(product_details):
 
 def safe_remove_modal(modal):
     try:
+        # Cancel any pending after events
+        for event in scheduled_after_events:
+            modal.after_cancel(event)
+        scheduled_after_events.clear()
+
         open_windows.remove(modal)
     except ValueError:
         pass  # Ignore if modal is not in the list

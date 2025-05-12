@@ -15,7 +15,8 @@ def main():
 
 def window():
       
-
+# admin 
+# 12345678
       root = CTk()
       root.geometry(CenterWindowToDisplay(root, 1580, 900, root._get_window_scaling()))
       root.resizable(False, False)
