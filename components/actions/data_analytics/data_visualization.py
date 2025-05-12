@@ -4,6 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from sqlalchemy import create_engine
 import customtkinter as ctk  
 import matplotlib.dates as mdates
+from tkinter import filedialog
 
 from matplotlib.ticker import MaxNLocator
 from cycler import cycler
@@ -11,6 +12,34 @@ from cycler import cycler
 # Example for MySQL connection
 engine = create_engine('mysql+pymysql://root:password@localhost/pos_new')
 db = engine.connect()  # This creates a connection to the database
+import mysql.connector 
+
+
+
+try:
+      
+      db = mysql.connector.connect(
+            
+            host = "localhost",
+            user = "root",
+            password = "password",
+            database = "pos_siaa"
+      
+      )
+      
+      if db.is_connected():
+            db_info = db.get_server_info()
+            print("Connected to MySQL Server version ", db_info)
+            cursor = db.cursor()
+            cursor.execute("select database();")
+            record = cursor.fetchone()
+            print("You're connected to database: ", record)
+            print("\n")
+      
+      mycursor = db.cursor()
+      
+except mysql.connector.Error as err:
+      print(err)
 
 def close_figures():
     plt.close('all')  # Closes all open figures
@@ -59,11 +88,10 @@ def display_line_chart(frame, period='daily'):
 
         # Clear the frame before embedding a new figure
         for widget in frame.winfo_children():
-            widget.pack_forget()
+            widget.destroy()
 
         # Use a fresh connection each time by creating it within the function
         with engine.connect() as db:
-            # Query to get total sales for each date
             query = """
             SELECT order_date, SUM(sub_total) as total_sale
             FROM tbl_sales
@@ -76,10 +104,8 @@ def display_line_chart(frame, period='daily'):
                 print("No sales data found.")
                 return
 
-            # Convert order_date to datetime
             df['order_date'] = pd.to_datetime(df['order_date'])
 
-            # Aggregate sales data by the specified period
             if period == 'daily':
                 df_agg = df.set_index('order_date').resample('D').sum()
             elif period == 'weekly':
@@ -89,26 +115,6 @@ def display_line_chart(frame, period='daily'):
             else:
                 raise ValueError("Invalid period. Choose from 'daily', 'weekly', or 'monthly'.")
 
-            # Define a custom color palette
-            custom_palette = ['#4E79A7', '#F28E2B', '#FBFBFB', '#76B7B2', '#59A14F']
-
-
-            # Apply the custom palette to Matplotlib
-            plt.rc('axes', prop_cycle=cycler('color', custom_palette))
-            plt.rcParams['axes.facecolor'] = '#EBE0D6'
-            plt.rcParams['figure.facecolor'] = '#30211E'
-            
-            # Update rcParams for consistent text colors
-            plt.rcParams['text.color'] = '#1E1E1E'  # Light color for general text
-            plt.rcParams['axes.labelcolor'] = '#FBFBFB'  # Light color for axis labels
-            plt.rcParams['xtick.color'] = '#FBFBFB'  # Light color for x-tick labels
-            plt.rcParams['ytick.color'] = '#FBFBFB'  # Light color for y-tick labels
-            plt.rcParams['axes.titlecolor'] = '#EBE0D6'  # Light color for title
-
-            
-        
-        
-            # Create the Matplotlib figure and plot
             fig, ax = plt.subplots(figsize=(6, 4))
             ax.plot(df_agg.index, df_agg['total_sale'], marker='o', label='Sales Revenue')
             ax.set_title(f'Cumulative Sales Revenue ({period.capitalize()})', fontsize=14)
@@ -117,19 +123,137 @@ def display_line_chart(frame, period='daily'):
             ax.grid(True, linestyle='--', alpha=0.7)
             ax.legend(loc='upper left', fontsize=10)
 
-            # Format the x-axis labels to 'YY-MM-DD'
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%y-%m-%d'))
-            ax.xaxis.set_major_locator(MaxNLocator(integer=True))  # Ensure clean integer tick spacing
+            canvas = FigureCanvasTkAgg(fig, master=frame)
+            canvas.draw()
+            canvas.get_tk_widget().pack(fill='both', expand=True)
 
-            # Embed the Matplotlib figure in the Tkinter Frame
-            canvas = FigureCanvasTkAgg(fig, master=frame)  # Attach figure to the frame
-            canvas.draw()  # Draw the canvas
-            canvas.get_tk_widget().pack(fill='both', expand=True)  # Make it fill the frame
-
-            # Ensure the Tkinter main loop is running
-            frame.update_idletasks()
-            frame.update()
-            
-            plt.show()
     except Exception as e:
         print(f"Error - unable to connect / convert to data: {e}")
+
+
+def cash_flow_linegraph_weekly(frame, period='weekly'):
+    try:
+        close_figures()
+
+        for widget in frame.winfo_children():
+            widget.destroy()
+
+        with engine.connect() as db:
+            query = """
+            SELECT 
+                YEAR(order_date) AS year, 
+                WEEK(order_date, 1) AS week, 
+                SUM(sub_total) AS total_sale
+            FROM tbl_sales
+            WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL 12 WEEK) 
+            GROUP BY year, week
+            ORDER BY year, week;
+            """
+            df = pd.read_sql_query(query, db)
+
+            if df.empty:
+                print("No sales data found for the current period.")
+                return
+
+            df['week_start_date'] = pd.to_datetime(
+                df['year'].astype(str) + '-W' + df['week'].astype(str) + '-1',
+                format='%G-W%V-%u'
+            )
+            df['week_label'] = 'W' + df['week'].astype(str).str.zfill(2)
+
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.plot(df['week_label'], df['total_sale'], marker='o', label='Sales Revenue')
+            ax.set_title('Cumulative Sales Revenue (Weekly)', fontsize=14)
+            ax.set_xlabel('Week', fontsize=12)
+            ax.set_ylabel('Sales Revenue', fontsize=12)
+            ax.grid(True, linestyle='--', alpha=0.7)
+            ax.legend(loc='upper left', fontsize=10)
+
+            canvas = FigureCanvasTkAgg(fig, master=frame)
+            canvas.draw()
+            canvas.get_tk_widget().pack(fill='both', expand=True)
+
+    except Exception as e:
+        print(f"Error - unable to connect / convert to data: {e}")
+
+
+def cash_flow_linegraph_monthly(frame, period='monthly'):
+    try:
+        close_figures()
+
+        for widget in frame.winfo_children():
+            widget.destroy()
+
+        with engine.connect() as db:
+            query = """
+            SELECT 
+                YEAR(order_date) AS year, 
+                MONTH(order_date) AS month, 
+                SUM(sub_total) AS total_sale
+            FROM tbl_sales
+            WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+            GROUP BY year, month
+            ORDER BY year, month;
+            """
+            df = pd.read_sql_query(query, db)
+
+            if df.empty:
+                print("No sales data found for the current period.")
+                return
+
+            df['month_label'] = df['year'].astype(str) + '-' + df['month'].astype(str).str.zfill(2)
+
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.plot(df['month_label'], df['total_sale'], marker='o', label='Sales Revenue')
+            ax.set_title('Cumulative Sales Revenue (Monthly)', fontsize=14)
+            ax.set_xlabel('Month', fontsize=12)
+            ax.set_ylabel('Sales Revenue', fontsize=12)
+            ax.grid(True, linestyle='--', alpha=0.7)
+            ax.legend(loc='upper left', fontsize=10)
+
+            canvas = FigureCanvasTkAgg(fig, master=frame)
+            canvas.draw()
+            canvas.get_tk_widget().pack(fill='both', expand=True)
+
+    except Exception as e:
+        print(f"Error - unable to connect / convert to data: {e}")
+
+def export_tbl_sales_to_excel():
+    try:
+        # Query to fetch all data from tbl_sales
+        sql = "SELECT * FROM tbl_sales"
+        mycursor.execute(sql)
+        rows = mycursor.fetchall()
+
+        # Get column names
+        column_names = [desc[0] for desc in mycursor.description]
+
+        # Create a DataFrame
+        df = pd.DataFrame(rows, columns=column_names)
+
+        # Map existing headers to improved headers
+        header_mapping = {
+            "sales_id": "Sales ID",
+            "invoice_id": "Invoice No.",
+            "product_id": "Product Code",
+            "product_name": "Product Name",
+            "product_category": "Category",
+            "quantity": "Quantity Sold",
+            "unit_price": "Unit Price (₱)",
+            "sub_total": "Subtotal (₱)",
+            "order_date": "Order Date & Time"
+        }
+        df.rename(columns=header_mapping, inplace=True)
+
+        # Ask the user where to save the file with a default name
+        file_path = filedialog.asksaveasfilename(defaultextension=".xlsx",
+                                                 filetypes=[("Excel files", "*.xlsx")],
+                                                 title="Save Sales Report",
+                                                 initialfile="Sales_Report.xlsx")
+        if file_path:
+            # Export to Excel
+            df.to_excel(file_path, index=False)
+            print(f"Sales report exported successfully to {file_path}")
+    except Exception as e:
+        print(f"Error exporting tbl_sales to Excel: {e}")
+
