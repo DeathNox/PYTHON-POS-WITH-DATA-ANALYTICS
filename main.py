@@ -50,3 +50,4 @@ def CenterWindowToDisplay(Screen: CTk, width: int, height: int, scale_factor: fl
 
 if __name__ == "__main__":
     main()      
+                  

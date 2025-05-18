@@ -368,9 +368,15 @@ def display_employee_sales_performance(container):
         messagebox.showinfo("No Data", "No valid employee sales data available to display today.")
         return
 
+    # Generate a color for each bar using a colormap
+    import matplotlib.cm as cm
+    import numpy as np
+    num_bars = len(employee_names)
+    colors = cm.get_cmap('tab20', num_bars)(np.arange(num_bars))
+
     # Create the bar graph using matplotlib
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.bar(employee_names, sales_performance, color='skyblue')
+    ax.bar(employee_names, sales_performance, color=colors)
     ax.set_title('Employee Sales Performance', fontsize=16)
     ax.set_xlabel('Employee Names', fontsize=12)
     ax.set_ylabel('Sales Performance', fontsize=12)

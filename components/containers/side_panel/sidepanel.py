@@ -17,7 +17,7 @@ def create_side_panel(window):  # Renamed function
     global side_panel, menu_btn, orders_btn, view_products_btn, sales_btn, inventory_btn, signout_btn  
     global ctk_menu_icon, ctk_orders_icon, ctk_product_icon, ctk_sales_btn_icon, ctk_inventory_btn_icon, ctk_signout_icon  
 
-    side_panel = tk.Frame(window, bg="#E4CFBB", width=185)  
+    side_panel = tk.Frame(window, bg="#E4CFBB", width=220)  # Increased from 185 to 220
     side_panel.pack_propagate(False)
     side_panel.pack(side="left", fill="y", padx=8, pady=8)
 
@@ -117,16 +117,16 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
                                   command=lambda: switch_to_sales_con(window, content_frame, user_id, account_type))
 
         sales_btn.pack(pady=10, padx=10)
-  
+        
     if account_type != "Employee":
-        sales_btn_icon = Image.open("./imgs/sidepanel_icons/sales_icon.png")
-        resized_icon = sales_btn_icon.resize((30, 40))
-        ctk_sales_btn_icon = CTk.CTkImage(dark_image=resized_icon, size=(30, 30))
+        performance_btn_icon = Image.open("./imgs/sidepanel_icons/performance_1.png")
+        resized_icon = performance_btn_icon.resize((30, 40))
+        ctk_performance_btn_icon = CTk.CTkImage(dark_image=resized_icon, size=(30, 30))
 
-        performance_btn = CTk.CTkButton(side_panel, text="Performance", image=ctk_sales_btn_icon,
+        performance_btn = CTk.CTkButton(side_panel, text="Performance", image=ctk_performance_btn_icon,
                                   font=("Inter", 18, "bold"),
                                   compound="left", fg_color="#372724",
-                                  text_color="#EBE0D6", width=1000,
+                                  text_color="#EBE0D6", width=1200,
                                   command=lambda: switch_to_performance_con(window, content_frame, user_id, account_type))
 
         performance_btn.pack(pady=10, padx=10)
