@@ -32,6 +32,19 @@ def switch_to_orders(window, content_frame, user_id):
     
 
     orders_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+
+def switch_to_archive(window, content_frame, user_id):
+    
+    from components.containers.orders_con import orders_container_archive
+    
+    for widget in content_frame.winfo_children():
+        widget.destroy()
+    
+
+    orders_frame = orders_container_archive(content_frame, user_id=user_id)
+    
+
+    orders_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
     
     
     

@@ -2,7 +2,7 @@ from PIL import Image, ImageTk
 import tkinter as tk
 import customtkinter as CTk
 from components.containers.side_panel.navigation import switch_to_orders, switch_to_home, switch_to_sales_con, \
-    switch_to_prod_view, switch_to_inventory_con, log_out, switch_to_performance_con
+    switch_to_prod_view, switch_to_inventory_con, log_out, switch_to_performance_con, switch_to_archive
 
 from components.containers.global_variable.global_var import account_type
 
@@ -48,6 +48,9 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
 
     def switch_to_orders_frame():
         switch_to_orders(window, content_frame, user_id=user_id)
+
+    def switch_to_archive_frame():
+        switch_to_archive(window, content_frame, user_id=user_id)
 
     def switch_to_home_frame():
         switch_to_home(window, content_frame, user_id=user_id)
@@ -128,6 +131,19 @@ def sidepanel_options(side_panel, window, content_frame, user_id, account_type):
                                   compound="left", fg_color="#372724",
                                   text_color="#EBE0D6", width=1200,
                                   command=lambda: switch_to_performance_con(window, content_frame, user_id, account_type))
+
+        performance_btn.pack(pady=10, padx=10)
+   
+    if account_type != "Employee":
+        performance_btn_icon = Image.open("./imgs/sidepanel_icons/performance_1.png")
+        resized_icon = performance_btn_icon.resize((30, 40))
+        ctk_performance_btn_icon = CTk.CTkImage(dark_image=resized_icon, size=(30, 30))
+
+        performance_btn = CTk.CTkButton(side_panel, text="Archive", image=ctk_performance_btn_icon,
+                                  font=("Inter", 18, "bold"),
+                                  compound="left", fg_color="#372724",
+                                  text_color="#EBE0D6", width=1200,
+                                  command= switch_to_archive_frame)
 
         performance_btn.pack(pady=10, padx=10)
     # == END Sales styling btn ===
