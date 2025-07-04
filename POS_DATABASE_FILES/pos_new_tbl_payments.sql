@@ -33,8 +33,7 @@ CREATE TABLE `tbl_payments` (
   PRIMARY KEY (`id`),
   KEY `fk_tbl_payments_sub_total` (`sub_total`),
   KEY `fk_product_purchase_order_id` (`purchase_order_id`),
-  CONSTRAINT `fk_product_purchase_order_id` FOREIGN KEY (`purchase_order_id`) REFERENCES `tbl_purchase_order` (`purchase_order_id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_tbl_payments_sub_total` FOREIGN KEY (`sub_total`) REFERENCES `tbl_purchase_order` (`sub_total`) ON DELETE CASCADE
+  CONSTRAINT `fk_product_purchase_order_id` FOREIGN KEY (`purchase_order_id`) REFERENCES `tbl_purchase_order` (`purchase_order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 15:19:30
+-- Dump completed on 2025-07-04 22:29:37

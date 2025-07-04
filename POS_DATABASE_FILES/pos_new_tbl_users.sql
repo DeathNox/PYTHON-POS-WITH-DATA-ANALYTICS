@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
--- Host: localhost    Database: pos_new
+-- Host: 127.0.0.1    Database: pos_new
 -- ------------------------------------------------------
--- Server version	8.0.39
+-- Server version	8.0.37
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,31 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tbl_product_ingredients`
+-- Table structure for table `tbl_users`
 --
 
-DROP TABLE IF EXISTS `tbl_product_ingredients`;
+DROP TABLE IF EXISTS `tbl_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_product_ingredients` (
-  `ingredient_id` int NOT NULL AUTO_INCREMENT,
-  `product_id` int DEFAULT NULL,
-  `ingredient_name` varchar(255) DEFAULT NULL,
-  `ingredient_category` varchar(255) DEFAULT NULL,
-  `status` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ingredient_id`),
-  UNIQUE KEY `product_id` (`product_id`,`ingredient_name`),
-  CONSTRAINT `tbl_product_ingredients_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `tbl_products` (`product_id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `tbl_users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `first_name` varchar(100) DEFAULT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `account_type` varchar(50) DEFAULT NULL,
+  `email_address` varchar(320) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email_address` (`email_address`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbl_product_ingredients`
+-- Dumping data for table `tbl_users`
 --
 
-LOCK TABLES `tbl_product_ingredients` WRITE;
-/*!40000 ALTER TABLE `tbl_product_ingredients` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_product_ingredients` ENABLE KEYS */;
+LOCK TABLES `tbl_users` WRITE;
+/*!40000 ALTER TABLE `tbl_users` DISABLE KEYS */;
+INSERT INTO `tbl_users` VALUES (1,'admin','$2b$12$DybW2CgHcIMqtfJ6b3/4KeDi1lhSjd.s/vCRYUiECCT59HDXbhG2W','Default','Admin','1234567890','Admin','admin@example.com');
+/*!40000 ALTER TABLE `tbl_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-22  3:59:58
+-- Dump completed on 2025-07-04 22:29:37

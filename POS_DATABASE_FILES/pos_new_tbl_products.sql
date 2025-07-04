@@ -16,39 +16,39 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tbl_sales`
+-- Table structure for table `tbl_products`
 --
 
-DROP TABLE IF EXISTS `tbl_sales`;
+DROP TABLE IF EXISTS `tbl_products`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_sales` (
-  `sales_id` int NOT NULL,
-  `invoice_id` int NOT NULL AUTO_INCREMENT,
-  `product_id` int DEFAULT NULL,
-  `product_name` varchar(50) DEFAULT NULL,
+CREATE TABLE `tbl_products` (
+  `product_id` int NOT NULL AUTO_INCREMENT,
+  `product_name` varchar(255) DEFAULT NULL,
+  `product_price` decimal(10,2) DEFAULT NULL,
   `product_category` varchar(100) DEFAULT NULL,
+  `product_image` longblob,
+  `unit_id` int DEFAULT NULL,
+  `product_status` varchar(100) DEFAULT NULL,
+  `product_type` enum('Made-to-Order','Pre-Stocked') DEFAULT NULL,
   `quantity` int DEFAULT NULL,
-  `unit_price` decimal(10,2) DEFAULT NULL,
-  `sub_total` decimal(10,2) DEFAULT NULL,
-  `order_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`invoice_id`),
-  KEY `fk_product_sales_id` (`product_id`),
-  KEY `fk_product_sales_quantity` (`quantity`),
-  KEY `fk_product_sales_unitPrice` (`unit_price`),
-  KEY `fk_product_sales_subTotal` (`sub_total`),
-  KEY `fk_product_sales_productName` (`product_name`),
-  KEY `fk_product_sales_productCategory` (`product_category`)
+  PRIMARY KEY (`product_id`),
+  KEY `product_category` (`product_category`),
+  KEY `fk_tbl_products_unit_id` (`unit_id`),
+  KEY `fk_tbl_products_unit_name` (`product_name`),
+  CONSTRAINT `fk_tbl_products_unit_id` FOREIGN KEY (`unit_id`) REFERENCES `tbl_product_unit` (`unit_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_tbl_products_unit_name` FOREIGN KEY (`product_name`) REFERENCES `tbl_product_unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tbl_products_ibfk_1` FOREIGN KEY (`product_category`) REFERENCES `tbl_product_category` (`category_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbl_sales`
+-- Dumping data for table `tbl_products`
 --
 
-LOCK TABLES `tbl_sales` WRITE;
-/*!40000 ALTER TABLE `tbl_sales` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_sales` ENABLE KEYS */;
+LOCK TABLES `tbl_products` WRITE;
+/*!40000 ALTER TABLE `tbl_products` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_products` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -60,4 +60,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 15:19:30
+-- Dump completed on 2025-07-04 22:29:37

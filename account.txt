@@ -1,0 +1,5 @@
+# for admin account login      
+# username - admin 
+# password - 12345678
+
+create an employee account in the admin page to have an employee account

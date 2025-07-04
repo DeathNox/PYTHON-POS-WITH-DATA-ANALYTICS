@@ -29,7 +29,7 @@ CREATE TABLE `tbl_product_category` (
   UNIQUE KEY `category_name_2` (`category_name`),
   KEY `category_id` (`category_id`),
   KEY `category_name` (`category_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,6 @@ CREATE TABLE `tbl_product_category` (
 
 LOCK TABLES `tbl_product_category` WRITE;
 /*!40000 ALTER TABLE `tbl_product_category` DISABLE KEYS */;
-INSERT INTO `tbl_product_category` VALUES (63,'Iced coffee'),(1,'Pasta'),(73,'Pastry');
 /*!40000 ALTER TABLE `tbl_product_category` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 15:19:30
+-- Dump completed on 2025-07-04 22:29:36

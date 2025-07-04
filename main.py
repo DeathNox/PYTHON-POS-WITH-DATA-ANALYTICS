@@ -14,9 +14,9 @@ def main():
 # main window
 
 def window():
-      
-# admin 
-# 12345678
+# for admin account login      
+# username - admin 
+# password - 12345678
       root = CTk()
       root.geometry(CenterWindowToDisplay(root, 1680, 900, root._get_window_scaling()))
       root.resizable(False, False)

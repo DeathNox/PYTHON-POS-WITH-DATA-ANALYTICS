@@ -16,35 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tbl_users`
+-- Table structure for table `tbl_product_unit`
 --
 
-DROP TABLE IF EXISTS `tbl_users`;
+DROP TABLE IF EXISTS `tbl_product_unit`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_users` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `first_name` varchar(100) DEFAULT NULL,
-  `last_name` varchar(100) DEFAULT NULL,
-  `contact` varchar(20) DEFAULT NULL,
-  `account_type` varchar(50) DEFAULT NULL,
-  `email_address` varchar(320) NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email_address` (`email_address`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `tbl_product_unit` (
+  `unit_id` int NOT NULL AUTO_INCREMENT,
+  `unit_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`unit_id`),
+  UNIQUE KEY `unit_name_3` (`unit_name`),
+  UNIQUE KEY `unit_name_4` (`unit_name`),
+  UNIQUE KEY `unit_name_5` (`unit_name`),
+  UNIQUE KEY `unit_name` (`unit_name`),
+  UNIQUE KEY `unit_name_6` (`unit_name`),
+  KEY `idx_tbl_product_unit` (`unit_name`),
+  KEY `unit_name_2` (`unit_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbl_users`
+-- Dumping data for table `tbl_product_unit`
 --
 
-LOCK TABLES `tbl_users` WRITE;
-/*!40000 ALTER TABLE `tbl_users` DISABLE KEYS */;
-INSERT INTO `tbl_users` VALUES (1,'admin','$2b$12$DybW2CgHcIMqtfJ6b3/4KeDi1lhSjd.s/vCRYUiECCT59HDXbhG2W','Default','Admin','1234567890','Admin','admin@example.com');
-/*!40000 ALTER TABLE `tbl_users` ENABLE KEYS */;
+LOCK TABLES `tbl_product_unit` WRITE;
+/*!40000 ALTER TABLE `tbl_product_unit` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_product_unit` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-31 23:03:12
+-- Dump completed on 2025-07-04 22:29:37

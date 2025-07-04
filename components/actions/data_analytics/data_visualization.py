@@ -23,7 +23,7 @@ try:
             host = "localhost",
             user = "root",
             password = "password",
-            database = "pos_siaa"
+            database = "pos_new"
       
       )
       

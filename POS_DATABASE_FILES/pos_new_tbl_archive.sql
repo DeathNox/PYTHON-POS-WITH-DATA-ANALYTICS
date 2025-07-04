@@ -16,33 +16,42 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tbl_product_unit`
+-- Table structure for table `tbl_archive`
 --
 
-DROP TABLE IF EXISTS `tbl_product_unit`;
+DROP TABLE IF EXISTS `tbl_archive`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_product_unit` (
-  `unit_id` int NOT NULL AUTO_INCREMENT,
-  `unit_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`unit_id`),
-  UNIQUE KEY `unit_name_3` (`unit_name`),
-  UNIQUE KEY `unit_name_4` (`unit_name`),
-  UNIQUE KEY `unit_name_5` (`unit_name`),
-  UNIQUE KEY `unit_name` (`unit_name`),
-  UNIQUE KEY `unit_name_6` (`unit_name`),
-  KEY `idx_tbl_product_unit` (`unit_name`),
-  KEY `unit_name_2` (`unit_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `tbl_archive` (
+  `purchase_order_id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int DEFAULT NULL,
+  `quantity` int NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  `sub_total` decimal(10,2) NOT NULL,
+  `order_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `order_status` varchar(30) DEFAULT NULL,
+  `item_name` varchar(50) DEFAULT NULL,
+  `product_category` varchar(100) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `cashier_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`purchase_order_id`,`quantity`,`unit_price`,`sub_total`),
+  UNIQUE KEY `purchase_order_id` (`purchase_order_id`),
+  KEY `idx_purchase_order_id` (`purchase_order_id`),
+  KEY `idx_purchase_order_sakes` (`quantity`),
+  KEY `idx_purchase_order_unitPrice` (`unit_price`),
+  KEY `idx_purchase_order_subTotal` (`sub_total`),
+  KEY `idx_purchase_order_productName` (`item_name`),
+  KEY `idx_purchase_order_productCategory` (`product_category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbl_product_unit`
+-- Dumping data for table `tbl_archive`
 --
 
-LOCK TABLES `tbl_product_unit` WRITE;
-/*!40000 ALTER TABLE `tbl_product_unit` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_product_unit` ENABLE KEYS */;
+LOCK TABLES `tbl_archive` WRITE;
+/*!40000 ALTER TABLE `tbl_archive` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_archive` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +63,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 15:19:30
+-- Dump completed on 2025-07-04 22:29:37

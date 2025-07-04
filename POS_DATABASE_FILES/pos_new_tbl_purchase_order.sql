@@ -16,31 +16,42 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tbl_product_ingredients`
+-- Table structure for table `tbl_purchase_order`
 --
 
-DROP TABLE IF EXISTS `tbl_product_ingredients`;
+DROP TABLE IF EXISTS `tbl_purchase_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_product_ingredients` (
-  `ingredient_id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_purchase_order` (
+  `purchase_order_id` int NOT NULL AUTO_INCREMENT,
   `product_id` int DEFAULT NULL,
-  `ingredient_name` varchar(255) DEFAULT NULL,
-  `ingredient_category` varchar(255) DEFAULT NULL,
-  `status` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ingredient_id`),
-  UNIQUE KEY `product_id` (`product_id`,`ingredient_name`),
-  CONSTRAINT `ftbl_product_ingredients_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `tbl_products` (`product_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `quantity` int NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  `sub_total` decimal(10,2) NOT NULL,
+  `order_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `order_status` varchar(30) DEFAULT NULL,
+  `item_name` varchar(50) DEFAULT NULL,
+  `product_category` varchar(100) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `cashier_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`purchase_order_id`,`quantity`,`unit_price`,`sub_total`),
+  UNIQUE KEY `purchase_order_id` (`purchase_order_id`),
+  KEY `idx_purchase_order_id` (`purchase_order_id`),
+  KEY `idx_purchase_order_sakes` (`quantity`),
+  KEY `idx_purchase_order_unitPrice` (`unit_price`),
+  KEY `idx_purchase_order_subTotal` (`sub_total`),
+  KEY `idx_purchase_order_productName` (`item_name`),
+  KEY `idx_purchase_order_productCategory` (`product_category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbl_product_ingredients`
+-- Dumping data for table `tbl_purchase_order`
 --
 
-LOCK TABLES `tbl_product_ingredients` WRITE;
-/*!40000 ALTER TABLE `tbl_product_ingredients` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_product_ingredients` ENABLE KEYS */;
+LOCK TABLES `tbl_purchase_order` WRITE;
+/*!40000 ALTER TABLE `tbl_purchase_order` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_purchase_order` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +63,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-20 15:19:30
+-- Dump completed on 2025-07-04 22:29:37
