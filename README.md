@@ -1,4 +1,6 @@
-# IPTC312_POS_System
+POS SYSTEM WITH DATA ANALYTICS
+
+Using customtkinter and MySQl
 
 Name of connection in MySQL is pos_new. Import all the database files to establish database connection
 If encountered any problem kindly create an Issue message in the repository. 
