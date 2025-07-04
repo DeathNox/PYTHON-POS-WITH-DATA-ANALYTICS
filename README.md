@@ -1,6 +1,6 @@
 POS SYSTEM WITH DATA ANALYTICS
 
-Using customtkinter and MySQl
+Using customtkinter and MySQL
 
 Name of connection in MySQL is pos_new. Import all the database files to establish database connection
 If encountered any problem kindly create an Issue message in the repository. 
