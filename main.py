@@ -18,7 +18,7 @@ def window():
 # username - admin 
 # password - 12345678
       root = CTk()
-      root.geometry(CenterWindowToDisplay(root, 1680, 900, root._get_window_scaling()))
+      root.geometry(CenterWindowToDisplay(root, 1580, 850, root._get_window_scaling()))
       root.resizable(False, False)
       root.title("Point of Sales | Company Name")
       icon = os.path.join(sys.path[0], 'imgs/sidepanel_icons/dummylogo.ico')
