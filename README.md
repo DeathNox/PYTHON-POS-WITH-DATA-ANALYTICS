@@ -83,19 +83,6 @@ Below are some screenshots of the system to showcase its main features and user 
 
 
 
-## Color Palette
-
-Used for UI design:
-
-```
-#EBE0D6
-#E9C7A7
-#372724
-#6F5E5C
-#E4CFBB
-#E3D8CD
-```
-
 ## Support
 
 If you encounter any issues, please create an Issue in the repository.
