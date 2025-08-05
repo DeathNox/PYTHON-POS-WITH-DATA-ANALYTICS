@@ -56,8 +56,7 @@ pip install numpy
    - Username: `admin`
    - Password: `12345678`
 
-## Data Analytics & Machine Learning
-
+## Data Analytics
 
 ## Screenshots
 
